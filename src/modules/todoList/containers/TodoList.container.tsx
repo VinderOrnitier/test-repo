@@ -1,11 +1,15 @@
-import React, { ReactElement, useEffect } from "react";
+import React, { ReactElement, useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 
 import { useReduxDispatch } from "../../../helpers";
+import useDebounce from "../../../helpers/useDebounce";
 import { fetchTodo, setPage } from "../todoList.actions";
 import { getTodoList } from "../todoList.selectors";
 
 export default function TodoContainer(): ReactElement {
+  const [search, setSearch] = useState('')
+  const debouncedSearch = useDebounce(searchTodo, 1000);
+
   const { todos, loading, error, page, itemsLimit } = useSelector(getTodoList)
 
   const dispatch = useReduxDispatch();
@@ -20,6 +24,19 @@ export default function TodoContainer(): ReactElement {
     dispatch(setPage(page))
   }
 
+  function searchTodo(query: string) {
+    fetch(`https://jsonplaceholder.typicode.com/todos?query=` + query)
+      .then(response => response.json())
+      .then(json => {
+        console.log(json);
+      })
+  }
+
+  const onChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value)
+    debouncedSearch(e.target.value)
+  }
+
   if (loading) {
     return <h3>Loading...</h3>
   }
@@ -27,9 +44,12 @@ export default function TodoContainer(): ReactElement {
   if (error) {
     return <h3>{error}</h3>
   }
+  
 
   return (
     <div>
+      <input onChange={onChangeSearch} type="search" placeholder='Search' />
+      <button onClick={() => debouncedSearch(search)}>button</button>
       <ul>
         {todos.map((todo: any) =>
           <li key={todo.id}>{todo.id} - {todo.title}</li>

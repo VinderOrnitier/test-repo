@@ -1,11 +1,11 @@
-import React, { ReactElement, useEffect } from "react";
+import React, { useEffect, FC } from "react";
 import { useSelector } from "react-redux";
 
 import { useReduxDispatch } from "../../../helpers";
 import { fetchUsers } from "../userList.actions";
 import { getUserList } from "../userList.selectors";
 
-export default function UsersContainer(): ReactElement {
+const UsersContainer: FC = () => {
   const { users, loading, error } = useSelector(getUserList)
 
   const dispatch = useReduxDispatch();
@@ -21,6 +21,7 @@ export default function UsersContainer(): ReactElement {
   if (error) {
     return <h3>{error}</h3>
   }
+  
 
   return (
     <div>
@@ -32,3 +33,5 @@ export default function UsersContainer(): ReactElement {
     </div>
   )
 }
+
+export default UsersContainer;

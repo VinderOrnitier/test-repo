@@ -8,3 +8,8 @@ export interface IUserState {
   error: any;
 }
 
+export interface IUsers {
+  users: any;
+  loading: boolean;
+  error: any;
+}
