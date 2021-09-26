@@ -1,8 +1,8 @@
-import React, { ReactElement, useEffect, useState, useCallback } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-import { useReduxDispatch } from "../../../helpers";
-import useDebounce from "../../../helpers/useDebounce";
+import { useReduxDispatch } from "../../../hooks";
+import useDebounce from "../../../hooks/useDebounce";
 import { fetchTodo, setPage } from "../todoList.actions";
 import { getTodoList } from "../todoList.selectors";
 
@@ -18,7 +18,7 @@ export default function TodoContainer(): ReactElement {
 
   useEffect(() => {
     dispatch(fetchTodo(page, itemsLimit));
-  }, [page]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [page]) // eslint-disable-line
 
   const onChangePage = (page: any) => {
     dispatch(setPage(page))
@@ -27,9 +27,6 @@ export default function TodoContainer(): ReactElement {
   function searchTodo(query: string) {
     fetch(`https://jsonplaceholder.typicode.com/todos?query=` + query)
       .then(response => response.json())
-      .then(json => {
-        console.log(json);
-      })
   }
 
   const onChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {

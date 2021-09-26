@@ -1,7 +1,7 @@
 import React, { useEffect, FC } from "react";
 import { useSelector } from "react-redux";
 
-import { useReduxDispatch } from "../../../helpers";
+import { useReduxDispatch } from "../../../hooks";
 import { fetchUsers } from "../userList.actions";
 import { getUserList } from "../userList.selectors";
 
@@ -12,7 +12,7 @@ const UsersContainer: FC = () => {
 
   useEffect(() => {
     dispatch(fetchUsers());
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, []) // eslint-disable-line
 
   if (loading) {
     return <h3>Loading...</h3>
@@ -22,7 +22,6 @@ const UsersContainer: FC = () => {
     return <h3>{error}</h3>
   }
   
-
   return (
     <div>
       <ul>
