@@ -5,10 +5,11 @@ import { store } from '../../store'
 
 import App from './App';
 
+
 export default function Root() {
   return (
     <Provider store={store}>
-      <App />
+        <App />
     </Provider>
   );
 }

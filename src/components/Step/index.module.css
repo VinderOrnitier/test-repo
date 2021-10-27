@@ -1,0 +1,17 @@
+.step {
+  font-weight: 400;
+  color: #006064;
+}
+
+.active {
+  color: #ffffff;
+  text-decoration: none;
+  cursor: default;
+}
+
+.completed {
+  color: #000;
+  text-decoration: line-through;
+  text-decoration: underline;
+  cursor: pointer;
+}

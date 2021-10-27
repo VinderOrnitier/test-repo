@@ -20,3 +20,8 @@ export interface IPost {
   title?: string
   body?: string
 }
+
+export interface ILoginForm {
+  email: string
+  password: string
+}

@@ -2,6 +2,7 @@ import React from 'react';
 import { GUARD, PATH } from '../constants';
 import { GalleryContainer } from '../modules/gallery';
 import { LoginContainer } from '../modules/login';
+import { MainContainer } from '../modules/main';
 import { PostDetailsContainer } from '../modules/postDetails';
 import { PostListContainer } from '../modules/postList';
 
@@ -16,7 +17,7 @@ const getRoutes = () => [
   {
     path: PATH.ROOT,
     exact: true,
-    component: () => (<div className="text-center text-3xl font-bold">ROOT App</div>),
+    component: MainContainer,
     error: 'Custom error for home page',
     meta: {
       [GUARD.AUTH_ONLY]: true
