@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { useHistory, useLocation } from "react-router-dom";
+import { Prompt, useHistory, useLocation } from "react-router-dom";
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -32,6 +32,11 @@ const PersonalStep = () => {
   
   return (
     <>
+      <Prompt
+        message={(location) =>
+          location.pathname.endsWith('/') ? true : `You have unsaved changes. Are you sure you want to leave this page?`
+        }
+      />
       <div className="text-white text-center text-3xl font-bold mb-8 mt-8">Personal information</div>
       <form className="flex flex-col items-baseline" onSubmit={handleSubmit(data => handleChangeStep(data))}>
         <Controller

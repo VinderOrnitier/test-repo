@@ -14,3 +14,10 @@ export interface ICompanyStep {
   companyAddress: string;
   companyPhone: string;
 }
+
+export interface IStepper extends IPersonalStep, ICompanyStep {
+  displayName?: string,
+  formComplete?: boolean,
+  uid?: string,
+  userImage?: string,
+}

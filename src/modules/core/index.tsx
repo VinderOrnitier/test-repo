@@ -1,10 +1,11 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 
-import { store } from '../../store'
+import { setupStore } from '../../store'
 
 import App from './App';
 
+const store = setupStore();
 
 export default function Root() {
   return (

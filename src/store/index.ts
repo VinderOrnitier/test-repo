@@ -4,5 +4,5 @@
 
 // export { store, persistor }
 
-import { store } from './store';
-export { store }
+import { setupStore } from './store';
+export { setupStore }
