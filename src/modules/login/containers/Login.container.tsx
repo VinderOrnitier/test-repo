@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { GoogleAuthProvider } from "firebase/auth";
+import * as yup from 'yup';
 
 import { AppContext } from '../../core/AppContextProvider';
 import { LoginContext } from '..';
@@ -16,8 +17,7 @@ const LoginContainer = () => {
   const { auth } = useContext(AppContext);
 
   const { control, handleSubmit, formState: { errors } } = useForm<ILoginForm>({
-    // @ts-ignore
-    resolver: yupResolver(SignInSchema),
+    resolver: yupResolver<yup.AnyObjectSchema>(SignInSchema),
     mode: 'onChange',
   });
 

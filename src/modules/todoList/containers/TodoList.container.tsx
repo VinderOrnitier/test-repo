@@ -1,66 +1,120 @@
-import React, { ReactElement, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { ReactElement, useEffect, useState } from 'react';
+import { useForm, Controller } from 'react-hook-form';
 
-import { useReduxDispatch } from "../../../hooks";
-import useDebounce from "../../../hooks/useDebounce";
-import { fetchTodo, setPage } from "../todoList.actions";
-import { getTodoList } from "../todoList.selectors";
+import { VButton, VInput, VModal } from '../../../components';
+import service from '../todoList.service';
+import { ITodo } from '../todoList.types';
+import { INITIAL_VALUES } from '../todoList.constants';
 
 export default function TodoContainer(): ReactElement {
-  const [search, setSearch] = useState('')
-  const debouncedSearch = useDebounce(searchTodo, 1000);
+  const [limit, setLimit] = useState(10);
+  const [modal, setModal] = useState(false);
+  const [data, setData] = useState<ITodo>(INITIAL_VALUES);
 
-  const { todos, loading, error, page, itemsLimit } = useSelector(getTodoList)
+  const { data: todos, isLoading, error } = service.useFetchAllTodosQuery(limit);
+  const [createTodo] = service.useCreateTodoMutation();
+  const [deleteTodo] = service.useDeleteTodoMutation();
+  const [updateTodo] = service.useUpdateTodoMutation();
 
-  const dispatch = useReduxDispatch();
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    reset,
+  } = useForm<ITodo>({
+    mode: 'onChange',
+    defaultValues: INITIAL_VALUES,
+  });
 
-  const pages = [1, 2, 3, 4, 5];
+  const handleToggle = () => {
+    setModal(true);
+  };
+
+  const handleUpdateModal = (todo: ITodo) => {
+    setModal(true);
+    setData(todo);
+    setValue('title', todo.title);
+  };
+
+  const handleCreate = async (todo: ITodo) => {
+    await createTodo(todo);
+  };
+
+  const handleUpdate = async (todo: ITodo) => {
+    await updateTodo(todo);
+  };
+
+  const handleChanged = async (todo: ITodo) => {
+    await updateTodo({ ...todo, completed: !todo.completed });
+  };
+
+  const onSubmit = (todo: ITodo) => {
+    data.title ? handleUpdate({ ...data, title: todo.title } as ITodo) : handleCreate({ ...data, ...todo } as ITodo);
+    reset();
+    setData(INITIAL_VALUES);
+    setModal(false);
+  };
+
+  const handleDelete = (todo: ITodo) => {
+    deleteTodo(todo);
+  };
 
   useEffect(() => {
-    dispatch(fetchTodo(page, itemsLimit));
-  }, [page]) // eslint-disable-line
+    return () => {
+      reset();
+    };
+  }, [reset]); // eslint-disable-line
 
-  const onChangePage = (page: any) => {
-    dispatch(setPage(page))
-  }
-
-  function searchTodo(query: string) {
-    fetch(`https://jsonplaceholder.typicode.com/todos?query=` + query)
-      .then(response => response.json())
-  }
-
-  const onChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value)
-    debouncedSearch(e.target.value)
-  }
-
-  if (loading) {
-    return <h3>Loading...</h3>
+  if (isLoading) {
+    return <h3>Loading...</h3>;
   }
 
   if (error) {
-    return <h3>{error}</h3>
+    return <h3>Cant load todos</h3>;
   }
-  
 
   return (
     <div>
-      <input onChange={onChangeSearch} type="search" placeholder='Search' />
-      <button onClick={() => debouncedSearch(search)}>button</button>
+      <VButton className="mb-4" onClick={handleToggle}>
+        Create task
+      </VButton>
+      <hr />
       <ul>
-        {todos.map((todo: any) =>
-          <li key={todo.id}>{todo.id} - {todo.title}</li>
-        )}
-        {pages.map(p =>
-          <button
-            key={p}
-            style={{background:p === page ? 'pink' : 'initial'}}
-            onClick={() => onChangePage(p)}
-          >
-            {p}
-          </button>
-        )}
+        {todos?.map((todo: ITodo) => (
+          <li className="border flex items-center" key={todo.id}>
+            <input
+              className="ml-2 mr-2"
+              type="checkbox"
+              onChange={() => handleChanged(todo)}
+              checked={todo.completed}
+            />
+            <div className="mr-4">
+              {todo.id} - {todo.title}
+            </div>
+            <button className="text-red-400" onClick={() => handleDelete(todo)}>
+              Delete &nbsp;
+            </button>
+            <button onClick={() => handleUpdateModal(todo)}>&nbsp; Update</button>
+          </li>
+        ))}
       </ul>
+      <hr />
+      <VButton className="mt-4" onClick={() => setLimit((prev) => prev + 10)}>
+        Load more
+      </VButton>
+      <VModal title="Create post" visible={modal} setVisible={setModal}>
+        <form className="flex flex-col items-baseline" onSubmit={handleSubmit(onSubmit)}>
+          <Controller
+            name="title"
+            control={control}
+            render={({ field: { ref, ...rest } }) => (
+              <div className="mb-4">
+                <VInput {...rest} placeholder="Task name" />
+              </div>
+            )}
+          />
+        </form>
+      </VModal>
     </div>
-  )
+  );
 }

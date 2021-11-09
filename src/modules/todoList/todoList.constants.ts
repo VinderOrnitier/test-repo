@@ -1,8 +1,10 @@
 export const MODULE_NAME = 'todoList';
+export const MODULE_API = 'todoAPI';
+export const MODULE_TAG = 'Todo';
 
-// actions
-export const TODO_REQUEST = `${MODULE_NAME}/TODO_REQUEST`
-export const TODO_SUCCESS = `${MODULE_NAME}/TODO_SUCCESS`
-export const TODO_FAILURE = `${MODULE_NAME}/TODO_FAILURE`
-
-export const SET_TODO_PAGE = `${MODULE_NAME}/SET_TODO_PAGE`
+export const INITIAL_VALUES = {
+  userId: null,
+  id: null,
+  title: '',
+  completed: false
+}

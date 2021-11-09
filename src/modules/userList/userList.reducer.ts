@@ -1,13 +1,12 @@
-import { createSlice } from '@reduxjs/toolkit';
-import IAction from '../../interfaces/IAction';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { fetchUsers } from './userList.actions';
 import * as CONSTANTS from './userList.constants'
-import { MODULE_NAME } from './userList.constants';
-import { IUserState } from './userList.types';
+import { IUser, IUserState } from './userList.types';
 
 const initialState: IUserState = {
   users: [],
   loading: false,
-  error: null,
+  error: '',
 }
 
 // export default (state = initialState, action: IAction): IUserState => {
@@ -35,11 +34,36 @@ const initialState: IUserState = {
 //   }
 // }
 
-const userSlice = createSlice({
-  name: MODULE_NAME,
+export const userSlice = createSlice({
+  name: CONSTANTS.MODULE_NAME,
   initialState,
   reducers: {
-
+    // fetchUsersRequest(state) {
+    //   state.loading = true;
+    // },
+    // fetchUsersSuccess(state, action: PayloadAction<IUser[]>) {
+    //   state.loading = false;
+    //   state.error = '';
+    //   state.users = action.payload;
+    // },
+    // fetchUsersFailure(state, action: PayloadAction<string>) {
+    //   state.loading = false;
+    //   state.error = action.payload;
+    // },
+  },
+  extraReducers: {
+    [fetchUsers.pending.type]: (state) => {
+      state.loading = true;
+    },
+    [fetchUsers.fulfilled.type]: (state, action: PayloadAction<IUser[]>) => {
+      state.loading = false;
+      state.error = '';
+      state.users = action.payload;
+    },
+    [fetchUsers.rejected.type]: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
   }
 })
 

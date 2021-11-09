@@ -1,7 +1,3 @@
-export interface IState {
-  list: []
-}
-
 export interface IUser {
   id: number;
   name: string;
@@ -11,7 +7,7 @@ export interface IUser {
 export interface IUserState {
   users: IUser[];
   loading: boolean;
-  error: any;
+  error: string;
 }
 
 export const initialState: IUserState = {

@@ -5,6 +5,8 @@ import { LoginContainer } from '../modules/login';
 import { MainContainer } from '../modules/main';
 import { PostDetailsContainer } from '../modules/postDetails';
 import { PostListContainer } from '../modules/postList';
+import { TodoListContainer } from '../modules/todoList';
+import { UsersListContainer } from '../modules/userList';
 
 const getRoutes = () => [
   {
@@ -45,6 +47,24 @@ const getRoutes = () => [
     path: PATH.POST,
     exact: true,
     component: PostDetailsContainer,
+    error: 'Custom error for home page',
+    meta: {
+      [GUARD.AUTH_ONLY]: true
+    }
+  },
+  {
+    path: PATH.USERS, // just for test reasons
+    exact: true,
+    component: UsersListContainer,
+    error: 'Custom error for home page',
+    meta: {
+      [GUARD.AUTH_ONLY]: true
+    }
+  },
+  {
+    path: PATH.TODOS, // just for test reasons
+    exact: true,
+    component: TodoListContainer,
     error: 'Custom error for home page',
     meta: {
       [GUARD.AUTH_ONLY]: true
