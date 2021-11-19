@@ -7,7 +7,7 @@ export interface IUser {
 export interface IUserState {
   users: IUser[];
   loading: boolean;
-  error: string;
+  error: any;
 }
 
 export const initialState: IUserState = {

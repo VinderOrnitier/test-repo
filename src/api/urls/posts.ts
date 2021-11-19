@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 
 const MODULE_NAME = 'posts';
 
-export const getPostsUrl = (): string => `https://jsonplaceholder.typicode.com/${MODULE_NAME}/`;
+export const getPostsUrl = (): string => `http://localhost:5000/${MODULE_NAME}/`;
 
 export class PostService {
   static async getAll(limit = 10, page = 1): Promise<AxiosResponse> {

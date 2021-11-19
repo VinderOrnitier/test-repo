@@ -1,6 +1,11 @@
 export const MODULE_NAME = 'postList';
+export const MODULE_API = 'postAPI';
+export const MODULE_TAG = 'Post';
+export const MODULE_URL = '/posts';
 
-// actions
-export const POSTS_REQUEST = `${MODULE_NAME}/POSTS_REQUEST`
-export const POSTS_SUCCESS = `${MODULE_NAME}/POSTS_SUCCESS`
-export const POSTS_FAILURE = `${MODULE_NAME}/POSTS_FAILURE`
+export const INITIAL_VALUES = {
+  userId: 0,
+  id: 0,
+  title: '',
+  body: ''
+}

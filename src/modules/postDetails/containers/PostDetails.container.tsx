@@ -4,11 +4,10 @@ import { urls } from '../../../api';
 import { VButton, VComments, VLoader } from '../../../components';
 import { goBackRedirect } from '../../../helpers';
 import { useFetching } from '../../../hooks';
-import { IPost } from '../../postList/postList.types';
 import { IComments } from '../postDetails.types';
 
 const PostDetailsContainer = () => {
-  const [post, setPost] = useState<IPost>({});
+  const [post, setPost] = useState<any>({});
   const [comments, setComments] = useState<IComments[]>([]);
   const { id } = useParams<{ id: string }>();
 

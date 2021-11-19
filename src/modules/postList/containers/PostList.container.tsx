@@ -1,42 +1,44 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
+
 import { ListItem, VButton, VLoader, VModal, VPagination } from '../../../components';
-import { useFetching, usePosts } from '../../../hooks';
 import PostFilter from '../components/PostFilter';
 import PostForm from '../components/PostForm';
 import { IPost } from '../postList.types';
-import { urls } from '../../../api';
+import { service } from '../postList.module';
 import { getPageCount } from '../../../utils';
+import { usePosts } from '../../../hooks';
+
 
 const PostListContainer = () => {
-  const [posts, setPosts] = useState<IPost[]>([]);
-  const [filter, setFilter] = useState({ sort: '', query: '' });
+  const [filtered, setFiltered] = useState({ sort: '', query: '' });
   const [modal, setModal] = useState(false);
-  const [totalPages, setTotalPages] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
 
-  const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
-
-  const [fetchPosts, isPostsLoading, postError] = useFetching(async (limit: any, page: any) => {
-    const response = await urls.PostService.getAll(limit, page);
-    setPosts(response.data);
-    const totalCount = response.headers['x-total-count'];
-    setTotalPages(getPageCount(totalCount, limit));
-  });
+  const { data, isLoading, error} = service.useFetchAllPostsQuery({limit, page});
+  const [createPost] = service.useCreatePostMutation();
+  const [deletePost] = service.useDeletePostMutation();
+  
+  const sortedAndSearchedPosts = usePosts(data, filtered.sort, filtered.query);
 
   useEffect(() => {
-    // @ts-ignore
-    fetchPosts(limit, page);
-  }, [limit]); // eslint-disable-line
+    const url = 'http://localhost:5000/posts'
+    axios.head(url, { params: {_limit: -1}}).then((resp) => {
+      const total = resp.headers['x-total-count'];
+      setTotalPages(getPageCount(total, limit));
+    });
+  }, [limit]);
 
-  const createPost = (newPost: IPost) => {
-    setPosts([...posts, newPost]);
+  const handlePost = (newPost: IPost) => {
+    createPost(newPost);
     setModal(false);
   };
 
   const removePost = (post: IPost) => {
-    setPosts(posts.filter((p) => p.id !== post.id));
+    deletePost(post)
   };
 
   const toggleModal = (modal: boolean) => {
@@ -45,8 +47,6 @@ const PostListContainer = () => {
 
   const changePage = (page: number) => {
     setPage(page);
-    // @ts-ignore
-    fetchPosts(limit, page);
   };
   
   return (
@@ -56,15 +56,15 @@ const PostListContainer = () => {
         <VButton onClick={toggleModal}>Add new post</VButton>
       </div>
       <hr className="my-4" />
-      <PostFilter filter={filter} setFilter={setFilter} />
-      {postError && <h2 className="text-3xl text-center font-bold my-4">{postError}</h2>}
-      {isPostsLoading ? (
+      <PostFilter filter={filtered} setFilter={setFiltered} />
+      {error && <h2 className="text-3xl text-center font-bold my-4">{error}</h2>}
+      {isLoading ? (
         <VLoader className="h-64" />
       ) : (
         <ul className="my-6">
-          {sortedAndSearchedPosts.length ? (
+          {sortedAndSearchedPosts?.length ? (
             <TransitionGroup className="overflow-x-hidden">
-              {sortedAndSearchedPosts.map((post: IPost, index: number) => (
+              {sortedAndSearchedPosts?.map((post: IPost, index: number) => (
                 <CSSTransition key={post.id} timeout={500} classNames="item-list">
                   <ListItem {...post} number={index + 1} remove={removePost} />
                 </CSSTransition>
@@ -83,7 +83,7 @@ const PostListContainer = () => {
         setLimit={setLimit}
       />
       <VModal title="Create post" visible={modal} setVisible={setModal}>
-        <PostForm create={createPost} />
+        <PostForm create={handlePost} />
       </VModal>
     </>
   );

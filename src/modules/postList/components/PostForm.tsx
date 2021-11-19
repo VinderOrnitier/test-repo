@@ -1,15 +1,17 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useContext, useState } from 'react';
 import { VInput, VButton } from '../../../components';
+import { LoginContext } from '../../login';
 
 const PostForm = ({ create }: any) => {
   const [post, setPost] = useState({ title: '', body: '' });
+  const { user } = useContext(LoginContext);
 
   const addNewPost = (e: React.FormEvent<FormEvent>) => {
     e.preventDefault();
     const newPost = {
       ...post,
-      id: Date.now(),
-      userId: Date.now(),
+      // id: Date.now(),
+      userId: user?.uid,
     };
     create(newPost);
     setPost({ title: '', body: '' });
