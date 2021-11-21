@@ -1,0 +1,14 @@
+.paginationWrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.paginationButton {
+  margin-right: 8px;
+}
+
+.paginationButtonActive {
+  background-color: #ffffff;
+  color: #000;
+}

@@ -1,18 +1,19 @@
 import React, { useEffect, FC } from "react";
-import { useSelector } from "react-redux";
 
-import { useReduxDispatch } from "../../../helpers";
+import { useAppDispatch, useAppSelector } from "../../../hooks";
 import { fetchUsers } from "../userList.actions";
-import { getUserList } from "../userList.selectors";
+import { IUser } from "../userList.types";
 
 const UsersContainer: FC = () => {
-  const { users, loading, error } = useSelector(getUserList)
+  const dispatch = useAppDispatch();
+  const { users, loading, error } = useAppSelector(state => state.userReducer);
 
-  const dispatch = useReduxDispatch();
+  // const dispatch = useReduxDispatch();
+  // const { users, loading, error } = useSelector(getUserList)
 
   useEffect(() => {
     dispatch(fetchUsers());
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, []) // eslint-disable-line
 
   if (loading) {
     return <h3>Loading...</h3>
@@ -22,11 +23,10 @@ const UsersContainer: FC = () => {
     return <h3>{error}</h3>
   }
   
-
   return (
     <div>
       <ul>
-        {users.map((user: any) =>
+        {users.map((user: IUser) =>
           <li key={user.id}>{user.name}</li>
         )}
       </ul>

@@ -1,4 +1,4 @@
-export { } from './userList.module'
+export { UsersListContainer } from './userList.module'
 
 export { actions } from './userList.module'
 export { reducer } from './userList.module'

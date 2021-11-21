@@ -1,5 +1,4 @@
-export { } from './todoList.module'
+export { TodoListContainer } from './todoList.module'
 
-export { actions } from './todoList.module'
-export { reducer } from './todoList.module'
 export { MODULE_NAME } from './todoList.constants'
+export { service } from './todoList.module'
