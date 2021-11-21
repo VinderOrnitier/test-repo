@@ -1,40 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
-import { urls } from '../../../api';
 import { VButton, VComments, VLoader } from '../../../components';
 import { goBackRedirect } from '../../../helpers';
-import { useFetching } from '../../../hooks';
-import { IComments } from '../postDetails.types';
+import { service } from '../postDetails.module';
 
 const PostDetailsContainer = () => {
-  const [post, setPost] = useState<any>({});
-  const [comments, setComments] = useState<IComments[]>([]);
   const { id } = useParams<{ id: string }>();
 
-  const [fetchPost, isPostLoading, postError] = useFetching(async (id: string) => {
-    const response = await urls.PostService.getPost(id);
-    setPost(response.data);
-  });
+  const {data, isLoading, error} = service.useFetchPostQuery(id);
+  const {data: comments, isLoading: commentsIsLoading , error: commentsError} = service.useFetchCommentsQuery(id);
 
-  const [fetchComments, isCommentsLoading, commentsError] = useFetching(async (id: string) => {
-    const response = await urls.PostService.getPostComments(id);
-    setComments(response.data);
-  });
-
-  useEffect(() => {
-    // @ts-ignore
-    fetchPost(id);
-    // @ts-ignore
-    fetchComments(id);
-    // eslint-disable-next-line
-  }, []);
-
-  // if (loading) {
-  //   return <h3>Loading...</h3>
-  // }
-
-  if (postError || commentsError) {
-    return <h3>{postError || commentsError}</h3>
+  if (error || commentsError) {
+    return <h3>{error || commentsError}</h3>
   }
 
   return (
@@ -47,15 +24,15 @@ const PostDetailsContainer = () => {
       </div>
       <hr className="my-4" />
       <div>
-        {isPostLoading ? (
+        {isLoading ? (
           <VLoader className="h-64" />
         ) : (
           <>
             <h3 className="text-white text-2xl font-bold my-2">
-              {post.id}. {post.title}
+              {data?.id}. {data?.title}
             </h3>
-            <p>{post.body}</p>
-            <VComments comments={comments} isCommentsLoading={isCommentsLoading} />
+            <p>{data?.body}</p>
+            <VComments comments={comments?.comments} isCommentsLoading={commentsIsLoading} />
           </>
         )}
       </div>

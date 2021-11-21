@@ -7,6 +7,7 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { reducer as userReducer } from '../modules/userList'
 import { service as todoAPI } from '../modules/todoList';
 import { service as postAPI } from "../modules/postList";
+import { service as postDetailsAPI } from "../modules/postDetails";
 
 export const createRootReducer = combineReducers({
   // [LIST_MODULE_NAME]: listReduser,
@@ -14,12 +15,17 @@ export const createRootReducer = combineReducers({
   userReducer,
   [todoAPI.reducerPath]: todoAPI.reducer,
   [postAPI.reducerPath]: postAPI.reducer,
+  [postDetailsAPI.reducerPath]: postDetailsAPI.reducer,
 })
 
 export const setupStore = () => {
   return configureStore({
     reducer: createRootReducer,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat([todoAPI.middleware, postAPI.middleware])
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat([
+      todoAPI.middleware,
+      postAPI.middleware,
+      postDetailsAPI.middleware
+    ])
   })
 }
 
