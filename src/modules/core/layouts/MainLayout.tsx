@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 
-import { MENU_ITEMS, PATH } from '../../constants';
-import IChildrenProps from '../../interfaces/IChildren';
-import { VButton, VMenu } from '..';
-import { LoginContext } from '../../modules/login';
-import { logOut } from '../../helpers';
-import { AppContext } from '../../modules/core/AppContextProvider';
+import { MENU_ITEMS, PATH } from '../../../constants';
+import IChildrenProps from '../../../interfaces/IChildren';
+import { VButton, VMenu } from '../../../components';
+import { LoginContext } from '../../login';
+import { logOut } from '../../../helpers';
+import { AppContext } from '../AppContextProvider';
 
 const MainLayout = ({ children }: IChildrenProps) => {
   const { user } = useContext(LoginContext);

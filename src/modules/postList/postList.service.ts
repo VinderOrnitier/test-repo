@@ -1,10 +1,11 @@
 import { createApi, fetchBaseQuery} from '@reduxjs/toolkit/dist/query/react'
+import { PATH } from '../../constants';
 import { MODULE_API, MODULE_TAG, MODULE_URL } from './postList.constants';
 import { IPost } from './postList.types';
 
 export const postAPI = createApi({
   reducerPath: MODULE_API,
-  baseQuery: fetchBaseQuery({baseUrl: 'http://localhost:5000'}),
+  baseQuery: fetchBaseQuery({baseUrl: PATH.SERVER}),
   tagTypes: [MODULE_TAG],
   endpoints: (build) => ({
     fetchAllPosts: build.query<IPost[], { limit: number, page: number }>({

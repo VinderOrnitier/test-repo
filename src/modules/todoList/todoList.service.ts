@@ -1,10 +1,11 @@
 import { createApi, fetchBaseQuery} from '@reduxjs/toolkit/dist/query/react'
+import { PATH } from '../../constants';
 import { MODULE_API, MODULE_TAG } from './todoList.constants';
 import { ITodo } from './todoList.types';
 
 export const todoAPI = createApi({
   reducerPath: MODULE_API,
-  baseQuery: fetchBaseQuery({baseUrl: 'http://localhost:5000'}),
+  baseQuery: fetchBaseQuery({baseUrl: PATH.SERVER}),
   tagTypes: [MODULE_TAG],
   endpoints: (build) => ({
     fetchAllTodos: build.query<ITodo[], number>({

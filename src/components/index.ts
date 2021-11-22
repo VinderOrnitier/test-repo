@@ -1,5 +1,3 @@
-export { default as Layout} from './layouts'
-
 export { default as ListItem } from './ListItem'
 export { default as VInput } from './Input'
 export { default as VButton } from './Button'

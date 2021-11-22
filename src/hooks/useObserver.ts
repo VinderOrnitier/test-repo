@@ -15,7 +15,7 @@ const useObserver = (ref: any, canLoad: boolean, isLoading: any, callback: any) 
     observer.current = new IntersectionObserver(cb);
     observer.current.observe(ref.current);
 
-  }, [isLoading]); // eslint-disable-line
+  }, [isLoading, callback]); // eslint-disable-line
 }
 
 export default useObserver;

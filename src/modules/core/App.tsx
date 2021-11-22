@@ -1,5 +1,5 @@
 import React, { FC, ReactElement } from 'react';
-import Layout from '../../components/layouts';
+import Layout from './layouts';
 import AppRouter from '../../router';
 import AppContextProvider from './AppContextProvider';
 

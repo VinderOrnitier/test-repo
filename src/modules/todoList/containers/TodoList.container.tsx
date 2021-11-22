@@ -16,9 +16,6 @@ export default function TodoContainer(): ReactElement {
   const [deleteTodo] = service.useDeleteTodoMutation();
   const [updateTodo] = service.useUpdateTodoMutation();
 
-  console.log('todos ---', todos);
-  
-
   const {
     control,
     handleSubmit,

@@ -1,7 +1,7 @@
 import React from 'react';
-import { MENU_ITEMS, PATH } from '../../constants';
-import IChildrenProps from '../../interfaces/IChildren';
-import { VMenu } from '..';
+import { MENU_ITEMS, PATH } from '../../../constants';
+import IChildrenProps from '../../../interfaces/IChildren';
+import { VMenu } from '../../../components';
 
 const AuthLayout = ({ children }: IChildrenProps) => {
 

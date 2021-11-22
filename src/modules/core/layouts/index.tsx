@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
-import { getIsLoggedIn } from '../../helpers';
-import IChildrenProps from '../../interfaces/IChildren';
+import { getIsLoggedIn } from '../../../helpers';
+import IChildrenProps from '../../../interfaces/IChildren';
 
 import AuthLayout from './AuthLayout';
 import MainLayout from './MainLayout';
-import LoginContextProvider from '../../modules/login/components/LoginContextProvider';
+import LoginContextProvider from '../../login/components/LoginContextProvider';
 
 const Layout = ({ children }: IChildrenProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
