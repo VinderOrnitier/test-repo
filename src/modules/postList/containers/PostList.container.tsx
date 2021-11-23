@@ -43,7 +43,7 @@ const PostListContainer = () => {
     deletePost(post)
   };
 
-  const toggleModal = (modal: boolean) => {
+  const toggleModal = () => {
     setModal(true);
   };
 
@@ -68,7 +68,7 @@ const PostListContainer = () => {
             <TransitionGroup className="overflow-x-hidden">
               {sortedAndSearchedPosts?.map((post: IPost, index: number) => (
                 <CSSTransition key={post.id} timeout={500} classNames="item-list">
-                  <ListItem {...post} number={index + 1} remove={removePost} />
+                  <ListItem post={post} remove={removePost} />
                 </CSSTransition>
               ))}
             </TransitionGroup>

@@ -1,17 +1,25 @@
 import React from 'react';
 import classes from './index.module.css';
 
-const VSelect = ({...props}: any ) => {
-  const onChangeSelect = (e: any) => props.onChange(e.target.value)
+interface IProps {
+  options?: any[];
+  value: string | number;
+  onChange: (value: any) => void;
+  placeholder?: string
+  className?: string
+}
+
+const VSelect = ({options, value, onChange, placeholder, className }: IProps) => {
+  const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => onChange(e.target.value)
 
   return (
     <select
-      className={`${classes.select} ${props?.className}`}
-      value={props?.value}
+      className={`${classes.select} ${className}`}
+      value={value}
       onChange={onChangeSelect}
     >
-      <option defaultValue={props?.placeholder} hidden>{props?.placeholder}</option>
-      {props?.options.map((option: any) => (
+      <option defaultValue={placeholder} hidden>{placeholder}</option>
+      {options?.map((option: any) => (
         <option key={option.value} value={option.value}>{option.name}</option>
       ))}
     </select>

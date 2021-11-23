@@ -10,7 +10,16 @@ const OPTIONS = [
   {value: -1, name: 'All'}
 ];
 
-const VPagination = ({ totalPages, currentPage, changePage, limit, setLimit, ...props }: any) => {
+interface IProps {
+  totalPages: number,
+  currentPage: number,
+  changePage: (page: number) => void;
+  limit: number,
+  setLimit: (page: number) => void;
+  className?: string;
+}
+
+const VPagination = ({ totalPages, currentPage, changePage, limit, setLimit, className }: IProps) => {
 
   let pagesArray = getPagesArray(totalPages);
   
@@ -19,7 +28,7 @@ const VPagination = ({ totalPages, currentPage, changePage, limit, setLimit, ...
   }
 
   return (
-    <div className={`${classes.paginationWrapper} ${props?.className}`} {...props}>
+    <div className={`${classes.paginationWrapper} ${className}`}>
       {pagesArray.map((page: number) => (
         <VButton
           key={page}

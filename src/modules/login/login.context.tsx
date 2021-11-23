@@ -1,9 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, createContext } from 'react';
 
-import { LOCAL_STORAGE_KEYS } from '../../../constants';
-import IChildrenProps from '../../../interfaces/IChildren';
+import { LOCAL_STORAGE_KEYS } from '../../constants';
+import IChildrenProps from '../../interfaces/IChildren';
 
-import { LoginContext } from '../login.context';
+export const LoginContext = createContext<any>({});
 
 const LoginContextProvider = ({ children }: IChildrenProps) => {
   const [user, setUser] = useState(null);
@@ -26,7 +26,7 @@ const LoginContextProvider = ({ children }: IChildrenProps) => {
     <LoginContext.Provider value={contextValues}>
       {children}
     </LoginContext.Provider>
-    );
+  );
 };
 
 export default LoginContextProvider;

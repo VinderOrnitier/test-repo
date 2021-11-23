@@ -1,9 +1,14 @@
 import React from 'react'
 import classes from './index.module.css'
 
-const VStepper = ({children, ...props}: any) => {
+interface IProps {
+  className?: string;
+  children?: React.ReactChild | React.ReactChildren | object;
+}
+
+const VStepper = ({children, className}: IProps) => {
   return (
-    <ol {...props} className={`${classes.stepper} ${props?.className}`}>
+    <ol className={`${classes.stepper} ${className}`}>
       {children}
     </ol>
   )

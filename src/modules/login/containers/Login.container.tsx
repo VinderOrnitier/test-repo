@@ -5,12 +5,12 @@ import { GoogleAuthProvider } from "firebase/auth";
 import * as yup from 'yup';
 
 import { AppContext } from '../../core/AppContextProvider';
-import { LoginContext } from '..';
 import { VInput, VButton } from '../../../components';
 import { LOCAL_STORAGE_KEYS, PATH } from '../../../constants';
 import { ILoginForm } from '../login.types';
 import { SignInSchema } from '../../../yup';
 import { history } from '../../../utils';
+import { LoginContext } from '../login.context';
 
 const LoginContainer = () => {
   const { setUser } = useContext(LoginContext);
