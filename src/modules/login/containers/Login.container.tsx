@@ -21,10 +21,12 @@ const LoginContainer = () => {
     mode: 'onChange',
   });
 
-  const onLogIn = (newUser: any) => {
-    localStorage.setItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN, 'true');
-    localStorage.setItem(LOCAL_STORAGE_KEYS.USER_INFO, JSON.stringify(newUser));
-    history.push(PATH.ROOT);
+  const onLogIn = async (data: any) => {
+    login(data?.email, data?.password)
+  };
+
+  const onSignUp = async (data: any) => {
+    signup(data?.email, data?.password)
   };
 
   const onLogInWithGoggle = async () => {
