@@ -1,6 +1,1 @@
-export const MODULE_NAME = 'gallery';
-
-// actions
-export const GALLERY_REQUEST = `${MODULE_NAME}/GALLERY_REQUEST`
-export const GALLERY_SUCCESS = `${MODULE_NAME}/GALLERY_SUCCESS`
-export const GALLERY_FAILURE = `${MODULE_NAME}/GALLERY_FAILURE`
+export const MODULE_NAME = 'main';

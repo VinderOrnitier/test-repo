@@ -2,20 +2,26 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { VButton } from '..';
+import { MODULE_URL } from '../../modules/postList/postList.constants';
+import { IPost } from '../../modules/postList/postList.types';
 
 import classes from './index.module.css'
+interface IProps {
+  post: IPost,
+  remove: (post: IPost) => void,
+}
 
-const ListItem = (props: any) => (
+const ListItem = ({post, remove}: IProps) => (
   <li className={classes.item}>
     <div className={classes.itemContent}>
-      <h4>{props.id}. {props.title}</h4>
-      <p>{props.body}</p>
+      <h4>{post.id}. {post.title}</h4>
+      <p>{post.body}</p>
     </div>
     <div className={classes.itemControls}>
-      <Link to={`/posts/${props.id}`}>
-        <VButton >View</VButton>
+      <Link to={`${MODULE_URL}/${post.id}`}>
+        <VButton>View</VButton>
       </Link>
-      <VButton onClick={() => props.remove(props)}>Delete</VButton>
+      <VButton onClick={() => remove(post)}>Delete</VButton>
     </div>
   </li>
 );

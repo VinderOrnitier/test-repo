@@ -1,11 +1,17 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
+interface IProps {
+  path: string,
+  name: string,
+  exact?: boolean | undefined,
+}
+
 const VMenu = ({menuArray}: any) => {
 
   return (
     <ul className="flex items-center">
-      {menuArray.map((item: any) => (
+      {menuArray.map((item: IProps) => (
         <li key={item.name} className="ml-6 text-white underline hover:text-black">
           <NavLink
             to={item.path}

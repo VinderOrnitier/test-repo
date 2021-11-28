@@ -1,5 +1,5 @@
 enum GUARD {
-  AUTH_ONLY = 'AUTH_ONY'
+  AUTH_ONLY = 'AUTH_ONLY'
 }
 
 export default GUARD;

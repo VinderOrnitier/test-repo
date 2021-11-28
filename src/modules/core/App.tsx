@@ -1,11 +1,14 @@
 import React, { FC, ReactElement } from 'react';
-import Layout from '../../components/layouts';
+import Layout from './layouts';
 import AppRouter from '../../router';
 import AppContextProvider from './AppContextProvider';
+import LoginContextProvider from '../login/login.context';
 
 const App: FC = () => (
   <AppContextProvider>
-    <AppRouter>{(content: ReactElement) => <Layout>{content}</Layout>}</AppRouter>
+    <LoginContextProvider>
+      <AppRouter>{(content: ReactElement) => <Layout>{content}</Layout>}</AppRouter>
+    </LoginContextProvider>
   </AppContextProvider>
 );
 

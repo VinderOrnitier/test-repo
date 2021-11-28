@@ -9,6 +9,8 @@ import { IPost } from '../postList.types';
 import { service } from '../postList.module';
 import { getPageCount } from '../../../utils';
 import { usePosts } from '../../../hooks';
+import { PATH } from '../../../constants';
+import { MODULE_URL } from '../postList.constants';
 
 
 const PostListContainer = () => {
@@ -25,7 +27,7 @@ const PostListContainer = () => {
   const sortedAndSearchedPosts = usePosts(data, filtered.sort, filtered.query);
 
   useEffect(() => {
-    const url = 'http://localhost:5000/posts'
+    const url = `${PATH.SERVER}${MODULE_URL}`
     axios.head(url, { params: {_limit: -1}}).then((resp) => {
       const total = resp.headers['x-total-count'];
       setTotalPages(getPageCount(total, limit));
@@ -41,7 +43,7 @@ const PostListContainer = () => {
     deletePost(post)
   };
 
-  const toggleModal = (modal: boolean) => {
+  const toggleModal = () => {
     setModal(true);
   };
 
@@ -66,7 +68,7 @@ const PostListContainer = () => {
             <TransitionGroup className="overflow-x-hidden">
               {sortedAndSearchedPosts?.map((post: IPost, index: number) => (
                 <CSSTransition key={post.id} timeout={500} classNames="item-list">
-                  <ListItem {...post} number={index + 1} remove={removePost} />
+                  <ListItem post={post} remove={removePost} />
                 </CSSTransition>
               ))}
             </TransitionGroup>

@@ -1,22 +1,7 @@
-export interface IState {
-  list: []
-}
-
-export interface IUserState {
-  users: any;
-  loading: boolean;
-  error: any;
-}
-
-export interface IUsers {
-  users: any;
-  loading: boolean;
-  error: any;
-}
-
-export interface IPost {
-  userId?: number
+export interface IPhoto {
+  albumId?: number
   id?: number
   title?: string
-  body?: string
+  url?: string
+  thumbnailUrl?: string
 }
