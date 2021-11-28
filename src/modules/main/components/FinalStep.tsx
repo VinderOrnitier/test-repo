@@ -9,15 +9,17 @@ import { fromCamelCase, goBackRedirect } from '../../../helpers';
 import { getFormData, setFormData } from '../../../utils';
 import { AppContext } from '../../core/AppContextProvider';
 import { IStepper } from '../main.types';
+import { LoginContext } from '../../login';
 
 const FinalStep = () => {
   const history = useHistory();
+  const { user } = useContext(LoginContext);
   const { firestore } = useContext(AppContext);
   const [form, setForm] = useState<any>();
   const [userImage, setUserImage] = useState(null);
   const [initialValues] = useState(getFormData);
 
-  const stepper = firestore.collection('forms').doc('stepper');
+  const stepper = firestore.collection('forms').doc(user.uid);
   const [snapshot, loading, error] = useDocumentOnce(stepper);
 
   useEffect(() => {
@@ -27,9 +29,11 @@ const FinalStep = () => {
   }, [initialValues, snapshot]);
 
   const handleSetForm = async (data: IStepper) => {
-    await stepper.update(
+    await stepper.set(
       {
         ...data,
+        uid: user.uid,
+        displayName: user.displayName,
         // createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       },
       { merge: true }

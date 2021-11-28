@@ -1,15 +1,13 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
 import { MENU_ITEMS, PATH } from '../../../constants';
 import IChildrenProps from '../../../interfaces/IChildren';
 import { VButton, VMenu } from '../../../components';
-import { logOut } from '../../../helpers';
-import { AppContext } from '../AppContextProvider';
-import { LoginContext } from '../../login';
+import { useAuthContext, useLogOut } from '../../../hooks';
 
 const MainLayout = ({ children }: IChildrenProps) => {
-  const { user } = useContext(LoginContext);
-  const { auth } = useContext(AppContext);
+  const { user } = useAuthContext();
+  const { logout } = useLogOut()
   
   const menuArray = [
     {
@@ -26,15 +24,6 @@ const MainLayout = ({ children }: IChildrenProps) => {
       exact: true,
     },
   ];
-
-const logOutHandler = async () => {
-    await auth.signOut().then(() => {
-      console.info('Sign-out successful');
-    }).catch((error: any) => {
-      console.error(error);
-    });
-    logOut();
-  }
   
   return (
     <div className="main">
@@ -45,7 +34,7 @@ const logOutHandler = async () => {
         <VMenu menuArray={menuArray} />
       </header>
       <hr className="mb-4" />
-      <VButton className="ml-auto block" onClick={logOutHandler}>
+      <VButton className="ml-auto block" onClick={logout}>
         Log Out
       </VButton>
       <hr className="my-4" />

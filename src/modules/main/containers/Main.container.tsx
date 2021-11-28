@@ -10,6 +10,7 @@ import FinalStep from '../components/FinalStep';
 import PersonalStep from '../components/PersonalStep';
 import { AppContext } from '../../core/AppContextProvider';
 import { IStepper } from '../main.types';
+import { LoginContext } from '../../login';
 
 const TABS = [
   {
@@ -31,21 +32,22 @@ interface LocationState {
 }
 
 const MainContainer = () => {
+  const { user } = useContext(LoginContext);
   const { firestore } = useContext(AppContext);
   const history = useHistory();
   const [form, setForm] = useState<IStepper>();
   const { state = { activeStep: 0 } } = useLocation<LocationState>();
   const [initialValues] = useState(getFormData);
 
-  const stepper = firestore.collection('forms').doc('stepper');
+  const stepper = firestore.collection('forms').doc(user.uid);
   const [snapshot, loading, error] = useDocumentOnce(stepper);
 
   const tab = TABS[state?.activeStep] || TABS[0];
   const activeTab = state?.activeStep || 0;
-  const isComplete = snapshot?.data().formComplete;
+  const isComplete = form?.formComplete || false;
 
   useEffect(() => {
-    let data = snapshot?.data() || initialValues;
+    const data = snapshot?.data() || initialValues;
     setForm(data);
     setFormData(data);
     // eslint-disable-next-line

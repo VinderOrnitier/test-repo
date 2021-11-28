@@ -8,7 +8,7 @@ export const galleryAPI = createApi({
   baseQuery: fetchBaseQuery({baseUrl: PATH.SERVER}),
   tagTypes: [MODULE_TAG],
   endpoints: (build) => ({
-    fetchAllPhotos: build.query<IPhoto[], { limit: number, page: number }>({ // IPhoto[], { limit: number, page: number }
+    fetchAllPhotos: build.query<IPhoto[], { limit: number, page: number }>({
       query: ({limit = 10, page = 1}) => ({
         url: MODULE_URL,
         params: {
