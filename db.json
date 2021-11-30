@@ -16,7 +16,22 @@
       "userId": 1,
       "id": 3,
       "title": "fugiat veniam minus",
+      "amount": 300,
       "completed": true
+    },
+    {
+      "userId": null,
+      "id": 4,
+      "title": "some task name",
+      "completed": false
+    },
+    {
+      "userId": null,
+      "id": 5,
+      "title": "new task name",
+      "completed": false,
+      "amount": "299",
+      "createdAt": null
     }
   ],
   "posts": [

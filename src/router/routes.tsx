@@ -6,6 +6,7 @@ import { MainContainer } from '../modules/main';
 import { PostDetailsContainer } from '../modules/postDetails';
 import { PostListContainer } from '../modules/postList';
 import { TodoListContainer } from '../modules/todoList';
+import { TransactionsContainer } from '../modules/transactions';
 import { UsersListContainer } from '../modules/userList';
 
 const getRoutes = () => [
@@ -65,6 +66,15 @@ const getRoutes = () => [
     path: PATH.TODOS, // just for test reasons
     exact: true,
     component: TodoListContainer,
+    error: 'Custom error for home page',
+    meta: {
+      [GUARD.AUTH_ONLY]: true
+    }
+  },
+  {
+    path: PATH.TANSACTIONS, // just for test reasons
+    exact: true,
+    component: TransactionsContainer,
     error: 'Custom error for home page',
     meta: {
       [GUARD.AUTH_ONLY]: true

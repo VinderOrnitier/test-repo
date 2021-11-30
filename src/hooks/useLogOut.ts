@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { AppContext } from '../modules/core/AppContextProvider';
 import { LoginContext } from '../modules/login';
 
-export const useLogOut = () => {
+const useLogOut = () => {
   const { dispatch } = useContext(LoginContext);
   const { auth } = useContext(AppContext);
 
