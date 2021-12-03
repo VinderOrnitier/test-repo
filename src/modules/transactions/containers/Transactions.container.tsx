@@ -13,7 +13,11 @@ export default function TransactionsContainer(): ReactElement {
   const { user } = useAuthContext();
 
   const { response, addDocument, deleteDocument } = useFirestore('transactions');
-  const { documents, error: documentsError } = useCollection('transactions', ['uid', '==', user.uid], ['createdAt', 'desc']);
+  const { documents, error: documentsError } = useCollection(
+    'transactions',
+    ['uid', '==', user.uid],
+    ['createdAt', 'desc']
+  );
   
   const {
     control,

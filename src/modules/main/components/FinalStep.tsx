@@ -1,43 +1,29 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { useHistory, Prompt } from 'react-router-dom';
-
-// import firebase from 'firebase/compat/app';
-import { useDocumentOnce } from 'react-firebase-hooks/firestore';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Prompt } from 'react-router-dom';
 
 import { ImageUpload, VButton, VLoader } from '../../../components';
 import { fromCamelCase, goBackRedirect } from '../../../helpers';
 import { getFormData, setFormData } from '../../../utils';
-import { AppContext } from '../../core/AppContextProvider';
 import { IStepper } from '../main.types';
-import { LoginContext } from '../../login';
+import { useAuthContext, useDocument, useFirestore } from '../../../hooks';
 
 const FinalStep = () => {
-  const history = useHistory();
-  const { user } = useContext(LoginContext);
-  const { firestore } = useContext(AppContext);
-  const [form, setForm] = useState<any>();
-  const [userImage, setUserImage] = useState(null);
   const [initialValues] = useState(getFormData);
+  const { user } = useAuthContext();
+  const [form, setForm] = useState(initialValues);
+  const [userImage, setUserImage] = useState(null);
+  const { response, updateDocument } = useFirestore('forms');
+  const { document, error } = useDocument({ c: 'forms', id: user.uid });
 
-  const stepper = firestore.collection('forms').doc(user.uid);
-  const [snapshot, loading, error] = useDocumentOnce(stepper);
+  const docRef = initialValues || document;
 
   useEffect(() => {
-    let data = initialValues || snapshot?.data();
-    setForm(data);
-    setFormData(data);
-  }, [initialValues, snapshot]);
+    setForm(docRef);
+    setFormData(docRef);
+  }, [docRef]);
 
   const handleSetForm = async (data: IStepper) => {
-    await stepper.set(
-      {
-        ...data,
-        uid: user.uid,
-        displayName: user.displayName,
-        // createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      },
-      { merge: true }
-    );
+    await updateDocument(user.uid, data);
   };
 
   const handleSubmit = useCallback(async () => {
@@ -45,15 +31,16 @@ const FinalStep = () => {
     let data = {
       ...initialValues,
       userImage: initialImage,
+      uid: user.uid,
+      displayName: user.displayName || user.email,
       formComplete: true,
     };
     setFormData(data);
     await handleSetForm(data);
-    history.go(0);
-    // eslint-disable-next-line
+  // eslint-disable-next-line
   }, [initialValues, userImage, form]);
 
-  if (loading) {
+  if (response.isLoading) {
     return <VLoader className="h-64" />;
   }
 

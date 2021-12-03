@@ -1,6 +1,8 @@
 import React, { createContext } from 'react';
 import IChildrenProps from '../../interfaces/IChildren';
 
+import { getFirestore } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
@@ -8,8 +10,8 @@ import { FIREBASE_OPTIONS } from '../../constants';
 
 firebase.initializeApp(FIREBASE_OPTIONS);
 
-const auth = firebase.auth();
-const firestore = firebase.firestore();
+const firestore = getFirestore();
+const auth = getAuth();
 
 export const AppContext = createContext<any>({});
 

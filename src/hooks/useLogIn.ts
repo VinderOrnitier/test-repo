@@ -1,21 +1,30 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { AppContext } from '../modules/core/AppContextProvider';
 import { LoginContext } from '../modules/login';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 export const useLogIn = () => {
+  const [error, setError] = useState(null);
   const { dispatch } = useContext(LoginContext);
   const { auth } = useContext(AppContext);
 
-  const login = async (email: string, password: string) => {
-    try {
-      const { user } = await auth.signInWithEmailAndPassword(email, password);
-      dispatch({ type: 'LOGIN', payload: user });
-    } catch (err: any) {
-      console.log(err?.message);
-    }
+  const login = (email: string, password: string) => {
+    signInWithEmailAndPassword(auth, email, password)
+      .then((res: any) => {
+        dispatch({ type: 'LOGIN', payload: res.user });
+      })
+      .catch((err: any) => {
+        setError(err.message);
+      });
+    // try {
+    //   const { user } = await auth.signInWithEmailAndPassword(email, password);
+    //   dispatch({ type: 'LOGIN', payload: user });
+    // } catch (err: any) {
+    //   console.log(err?.message);
+    // }
   };
 
-  return { login };
+  return { login, error };
 };
 
 export default useLogIn;

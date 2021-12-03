@@ -11,7 +11,7 @@ const dafaultValues = {
   companyPhone: '',
 };
 
-export const setFormData = (data: any) => {
+export const setFormData = <T>(data: T) => {
   sessionStorage.setItem(SESSION_STORAGE_KEYS.STEPPER_FORM_DATA, JSON.stringify(data));
 };
 

@@ -1,32 +1,37 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { AppContext } from '../modules/core/AppContextProvider';
+import { collection, query, where, onSnapshot, orderBy } from 'firebase/firestore'
 
-// interface IQuery {
-//   collection: any,
-//   _query?: any[],
-//   _orderBy?: any,
+// interface ICollection {
+//   c: string,
+//   _q?: string[],
+//   _o?: string[],
 // }
-const useCollection = (collection: any, _query?: any, _orderBy?: any) => {
+
+const useCollection = (c: string, _q?: string[], _o?: string[]) => {
   const { firestore } = useContext(AppContext);
   const [documents, setDocuments] = useState<any>();
   const [error, setError] = useState<any>(null);
 
   // prevent infinite loop in useEffect with array on every call
-  const query = useRef(_query).current;
-  const orderBy = useRef(_orderBy).current;
+  const q = useRef(_q).current;
+  const o = useRef(_o).current;
+  
 
   useEffect(() => {
-    let ref = firestore.collection(collection)
+    let ref = collection(firestore, c)
 
     if(q) {
-      ref = query(ref, where(...q))
+      //@ts-ignore
+      ref = query(ref, where(...q));
     }
 
-    if(orderBy) {
-      ref = ref.orderBy(...orderBy)
+    if(o) {
+      //@ts-ignore
+      ref = query(ref, orderBy(...o));
     }
 
-    const unsub = ref.onSnapshot((snapshot: any) => {
+    const unsub = onSnapshot(ref, (snapshot: any) => {
       let results: any[] = [];
       snapshot.docs.forEach((doc: any) => {
         results.push({ ...doc.data(), id: doc.id })
@@ -40,7 +45,8 @@ const useCollection = (collection: any, _query?: any, _orderBy?: any) => {
     })
 
     return () => unsub()
-  }, [collection, query, orderBy])
+  // eslint-disable-next-line
+  }, [c, q, o])
 
   return {documents, error};
 };

@@ -2,6 +2,7 @@ import React, { createContext, useReducer, useContext, useEffect } from 'react';
 import IAction from '../../interfaces/IAction';
 import IChildrenProps from '../../interfaces/IChildren';
 import { AppContext } from '../core/AppContextProvider';
+import { onAuthStateChanged } from 'firebase/auth'
 
 export const LoginContext = createContext<any>({});
 
@@ -26,7 +27,7 @@ const LoginContextProvider = ({ children }: IChildrenProps) => {
   });
 
   useEffect(() => {
-    const unsub = auth.onAuthStateChanged((user: any) => {
+    const unsub = onAuthStateChanged(auth, (user: any) => {
       dispatch({ type: 'AUTH_IS_READY', payload: user });
       unsub();
     });

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { GoogleAuthProvider } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import * as yup from 'yup';
 
 import { AppContext } from '../../core/AppContextProvider';
@@ -13,8 +13,8 @@ import { useLogIn, useSignUp, useAuthContext } from '../../../hooks';
 const LoginContainer = () => {
   const { auth } = useContext(AppContext);
   const { dispatch } = useAuthContext();
-  const { login } = useLogIn();
-  const { signup } = useSignUp();
+  const { login, error: loginError } = useLogIn();
+  const { signup, error: signupError } = useSignUp();
 
   const {
     control,
@@ -33,20 +33,29 @@ const LoginContainer = () => {
     signup(data?.email, data?.password);
   };
 
-  const onLogInWithGoggle = async () => {
-    try {
-      const provider = new GoogleAuthProvider();
-      const { user } = await auth.signInWithPopup(provider);
-      dispatch({ type: 'LOGIN', payload: user });
-    } catch (error) {
-      console.log(error);
-    }
+  const onLogInWithGoggle = () => {
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+        .then((res: any) => {
+          dispatch({ type: 'LOGIN', payload: res.user });
+        })
+        .catch((err: any) => {
+          console.log(err);
+        });
+    // try {
+    //   const provider = new GoogleAuthProvider();
+    //   const { user } = await auth.signInWithPopup(provider);
+    //   dispatch({ type: 'LOGIN', payload: user });
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   return (
     <>
       <h2 className="text-3xl text-center font-bold my-4">Login</h2>
       <hr className="my-4" />
+      {(loginError || signupError) && <p className="mb-4 text-red-900">{loginError || signupError}</p>}
       <form className="flex flex-col items-baseline">
         <Controller
           name="email"

@@ -77,7 +77,7 @@ const CompanyStep = () => {
       </form>
       <div className="flex w-full justify-between mt-8">
         <VButton onClick={goBackRedirect} >Back</VButton>
-        <VButton onClick={() => handleSubmit(onSubmit)()}>Next step</VButton>
+        <VButton onClick={handleSubmit(onSubmit)}>Next step</VButton>
       </div>
     </>
   );

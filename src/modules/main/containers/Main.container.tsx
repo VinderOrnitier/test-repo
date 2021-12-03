@@ -1,16 +1,14 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { VStepper, VStep, VButton, VLoader } from '../../../components';
 import { getFormData, setFormData } from '../../../utils';
-import { useDocumentOnce } from 'react-firebase-hooks/firestore';
 
 import CompanyStep from '../components/CompanyStep';
 import FinalStep from '../components/FinalStep';
 import PersonalStep from '../components/PersonalStep';
-import { AppContext } from '../../core/AppContextProvider';
 import { IStepper } from '../main.types';
-import { LoginContext } from '../../login';
+import { useAuthContext, useDocument, useFirestore } from '../../../hooks';
 
 const TABS = [
   {
@@ -32,38 +30,30 @@ interface LocationState {
 }
 
 const MainContainer = () => {
-  const { user } = useContext(LoginContext);
-  const { firestore } = useContext(AppContext);
-  const history = useHistory();
-  const [form, setForm] = useState<IStepper>();
-  const { state = { activeStep: 0 } } = useLocation<LocationState>();
   const [initialValues] = useState(getFormData);
-
-  const stepper = firestore.collection('forms').doc(user.uid);
-  const [snapshot, loading, error] = useDocumentOnce(stepper);
+  const { user } = useAuthContext();
+  const [form, setForm] = useState<IStepper>(initialValues);
+  const { state = { activeStep: 0 } } = useLocation<LocationState>();
+  const { response, updateDocument } = useFirestore('forms');
+  const { document, error } = useDocument({c:'forms', id:user.uid});
+  
+  const docRef = document || initialValues
 
   const tab = TABS[state?.activeStep] || TABS[0];
   const activeTab = state?.activeStep || 0;
   const isComplete = form?.formComplete || false;
 
   useEffect(() => {
-    const data = snapshot?.data() || initialValues;
-    setForm(data);
-    setFormData(data);
-    // eslint-disable-next-line
-  }, [snapshot]);
+    setForm(docRef);
+    setFormData(docRef);
+  }, [docRef]);
+
   
   const handleEditForm = async () => {
-    await stepper.update(
-      {
-        formComplete: false,
-      },
-      { merge: true }
-    );
-    history.go(0);
+    await updateDocument(user.uid, { ...docRef, formComplete: false })
   };
 
-  if (loading) {
+  if (response.isLoading) {
     return <VLoader className="h-64" />;
   }
 

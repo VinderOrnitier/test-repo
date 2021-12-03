@@ -7,7 +7,7 @@ import { useAuthContext, useLogOut } from '../../../hooks';
 
 const MainLayout = ({ children }: IChildrenProps) => {
   const { user } = useAuthContext();
-  const { logout } = useLogOut()
+  const { logout, error: logoutError } = useLogOut()
   
   const menuArray = [
     {
@@ -38,6 +38,7 @@ const MainLayout = ({ children }: IChildrenProps) => {
         Log Out
       </VButton>
       <hr className="my-4" />
+      {logoutError && <p className="mb-4 text-red-900">{logoutError}</p>}
       {children}
     </div>
   );
