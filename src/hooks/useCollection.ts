@@ -18,8 +18,8 @@ const useCollection = (collection: any, _query?: any, _orderBy?: any) => {
   useEffect(() => {
     let ref = firestore.collection(collection)
 
-    if(query) {
-      ref = ref.where(...query)
+    if(q) {
+      ref = query(ref, where(...q))
     }
 
     if(orderBy) {
