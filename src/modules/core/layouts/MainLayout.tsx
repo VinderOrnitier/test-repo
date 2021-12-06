@@ -19,6 +19,10 @@ const MainLayout = ({ children }: IChildrenProps) => {
       name: MENU_ITEMS.GALLERY,
     },
     {
+      path: PATH.TRANSACTIONS,
+      name: MENU_ITEMS.TRANSACTIONS,
+    },
+    {
       path: PATH.POSTS,
       name: MENU_ITEMS.POSTS,
       exact: true,
@@ -29,7 +33,7 @@ const MainLayout = ({ children }: IChildrenProps) => {
     <div className="main">
       <header className="flex items-center justify-between my-2">
         <h4 className="font-bold">
-          Hello {user?.email}
+          Hello {user?.email} {'\u{1F44B}'}
         </h4>
         <VMenu menuArray={menuArray} />
       </header>

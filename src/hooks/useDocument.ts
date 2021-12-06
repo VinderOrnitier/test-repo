@@ -8,18 +8,21 @@ interface IDocument {
 }
 
 const useDocument = ({c, id}:IDocument) => {
-  const { firestore } = useContext(AppContext);
+  const { firestore, firebase } = useContext(AppContext);
   const [document, setDocument] = useState();
   const [error, setError] = useState(null);
 
   // prevent infinite loop in useEffect with array on every call
   const docId = useRef(id).current;
 
+  const timestamp = firebase.firestore.Timestamp;
+
   useEffect(() => {
     const ref = doc(firestore, c, docId);
+    const createdAt = timestamp.fromDate(new Date());
 
     const unsub = onSnapshot(ref, (snapshot: any) => {
-      setDocument({...snapshot.data()});
+      setDocument({...snapshot.data(), createdAt});
       setError(null);
     }, (error: any) => {
       console.log(error);

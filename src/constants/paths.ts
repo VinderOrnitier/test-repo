@@ -3,7 +3,7 @@ enum PATH {
   LOGIN = '/login',
   USERS = '/users',
   TODOS = '/todos',
-  TANSACTIONS = '/transactions',
+  TRANSACTIONS = '/transactions',
   GALLERY = '/gallery',
   POSTS = '/posts',
   POST = '/posts/:id',

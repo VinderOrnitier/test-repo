@@ -72,7 +72,7 @@ const getRoutes = () => [
     }
   },
   {
-    path: PATH.TANSACTIONS,
+    path: PATH.TRANSACTIONS,
     exact: true,
     component: TransactionsContainer,
     error: 'Custom error for home page',

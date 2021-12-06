@@ -3,10 +3,10 @@ export const MODULE_API = 'todoAPI';
 export const MODULE_TAG = 'Todo';
 
 export const INITIAL_VALUES = {
-  userId: null,
-  id: null,
+  id: '',
+  uid: '',
   name: '',
   completed: false,
   amount: '',
-  createdAt: null,
+  createdAt: {},
 }

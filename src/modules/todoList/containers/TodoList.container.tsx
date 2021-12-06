@@ -69,6 +69,8 @@ export default function TodoContainer(): ReactElement {
     return <h3>Loading...</h3>;
   }
 
+  const DDD = 123;
+
   if (error) {
     return <h3>Cant load todos</h3>;
   }

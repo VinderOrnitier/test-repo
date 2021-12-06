@@ -1,12 +1,12 @@
 import { useContext, useState } from 'react';
-import { AppContext } from '../modules/core/AppContextProvider';
 import { LoginContext } from '../modules/login';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
+import useAuthContext from './useAuthContext';
 
 export const useSignUp = () => {
   const [error, setError] = useState(null);
   const { dispatch } = useContext(LoginContext);
-  const { auth } = useContext(AppContext);
+  const { auth, firestore } = useAuthContext();
 
   const signup = async (email: string, password: string) => {
     createUserWithEmailAndPassword(auth, email, password)

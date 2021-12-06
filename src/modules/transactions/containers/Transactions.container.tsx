@@ -9,10 +9,11 @@ import { useAuthContext, useCollection, useFirestore } from '../../../hooks';
 export default function TransactionsContainer(): ReactElement {
   const [limit, setLimit] = useState(10);
   const [modal, setModal] = useState(false);
-  const [data, setData] = useState<ITransactions>(INITIAL_VALUES);
+  const [itemData, setItemData] = useState<ITransactions>(INITIAL_VALUES);
+  const [updated, setUpdated] = useState(false);
   const { user } = useAuthContext();
 
-  const { response, addDocument, deleteDocument } = useFirestore('transactions');
+  const { response, addDocument, updateDocument, deleteDocument } = useFirestore('transactions');
   const { documents, error: documentsError } = useCollection(
     'transactions',
     ['uid', '==', user.uid],
@@ -26,42 +27,62 @@ export default function TransactionsContainer(): ReactElement {
     reset,
   } = useForm<ITransactions>({
     mode: 'onChange',
-    defaultValues: INITIAL_VALUES,
+    defaultValues: INITIAL_VALUES || {},
   });
 
   const handleToggle = () => {
     setModal(true);
   };
 
-  const handleUpdateModal = (todo: ITransactions) => {
-    setModal(true);
-    setData(todo);
-    setValue('name', todo.name);
+  const handleCreate = async (data: ITransactions) => {
+    await addDocument({
+      ...data,
+      id: data.id,
+      uid: user.uid,
+      name: data.name,
+      amount: data.amount,
+      completed: false
+    });
   };
 
-  // const handleCreate = async (todo: ITransactions) => {
-  //   await createTodo(todo);
-  // };
+  const handleUpdate = async (data: ITransactions) => {
+    await updateDocument(data.id, { ...data });
+  };
 
-  // const handleUpdate = async (todo: ITransactions) => {
-  //   await updateTodo(todo);
-  // };
+  const handleChanged = async (data: ITransactions) => {
+    await updateDocument(data.id, { ...data, completed: !data.completed });
+  };
 
-  const handleChanged = async (todo: ITransactions) => {
-    // await updateTodo({ ...todo, completed: !todo.completed });
+  const handleUpdateModal = (data: ITransactions) => {
+    setModal(prev => prev = true);
+    setUpdated(prev => prev = true);
+    setItemData(prev => ({...prev, ...data}));
+    setValue('name', data.name);
+    setValue('amount', data.amount);
   };
 
   const onSubmit = (data: ITransactions) => {
-    addDocument({
-      uid: user.uid,
-      name: data.name,
-      amount: data.amount
-    });
+    if(updated) {
+      handleUpdate({
+        ...itemData,
+        name: data.name,
+        amount: data.amount
+      });
+    } else {
+      handleCreate({
+        ...data,
+        id: data.id,
+        uid: user.uid,
+        name: data.name,
+        amount: data.amount,
+        completed: false
+      });
+    }
     reset();
     setModal(false);
   };
 
-  const handleDelete = (id: number | null) => {
+  const handleDelete = (id: string | undefined) => {
     deleteDocument(id);
   };
 
@@ -101,7 +122,7 @@ export default function TransactionsContainer(): ReactElement {
                 {document?.amount && (<b className="ml-4">amount: {document.amount}</b>)}
               </div>
               <div className="ml-4">
-                <button className="text-red-400" onClick={() => handleDelete(document.id)}>
+                <button className="text-red-400" onClick={() => handleDelete(document?.id)}>
                   Delete &nbsp;
                 </button>
                 <button onClick={() => handleUpdateModal(document)}>&nbsp; Update</button>
