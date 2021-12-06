@@ -30,14 +30,14 @@ const FinalStep = () => {
     setFormData(docRef);
   }, [docRef]);
 
-  const handleSetForm = (data: IStepper) => {
-    const uploadTask = uploadBytesResumable(storageRef, userFile);
-    getDownloadURL(uploadTask.snapshot.ref)
-      .then((downloadURL) => {
-        updateDocument(user.uid, {...data, downloadURL});
-      }).catch((error: any) => {
-        console.log('Upload image error', error);
-      });
+  const handleSetForm = async (data: IStepper) => {
+    try {
+      const uploadTask = uploadBytesResumable(storageRef, userFile);
+      const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+      updateDocument(user.uid, {...data, downloadURL});
+    } catch (error) {
+      console.log('Upload image error', error);
+    }
   };
 
   const handleSubmit = useCallback(() => {

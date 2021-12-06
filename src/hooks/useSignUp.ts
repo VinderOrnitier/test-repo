@@ -1,30 +1,77 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+
+import { AppContext } from '../modules/core/AppContextProvider';
 import { LoginContext } from '../modules/login';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import useAuthContext from './useAuthContext';
+import { COLLECTION } from '../constants';
+
+const IMG_PLACEHOLDER = 'https://via.placeholder.com/80'
+
+interface IUser {
+  uid: string;
+  displayName: string | null;
+  email: string | null;
+  photoURL: string | null;
+}
 
 export const useSignUp = () => {
   const [error, setError] = useState(null);
-  const { dispatch } = useContext(LoginContext);
-  const { auth, firestore } = useAuthContext();
+  const [isCancelled, setIsCancelled] = useState(false);
 
-  const signup = async (email: string, password: string) => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((res: any) => {
-        dispatch({ type: 'LOGIN', payload: res.user });
-      })
-      .catch((err: any) => {
-        setError(err.message);
-      });
-    // try {
-    //   const { user } = await auth.createUserWithEmailAndPassword(email, password);
-    //   dispatch({ type: 'LOGIN', payload: user });
-    // } catch (err: any) {
-    //   console.log(err?.message);
-    // }
+  const { dispatch } = useContext(LoginContext);
+  const { auth, firestore } = useContext(AppContext);
+
+  const dispatchNotCancelled = (action: any) => {
+    if (!isCancelled) {
+      dispatch(action);
+    }
   };
 
-  return { signup, error };
+  const setDocument = async (user: IUser) => {
+    try {
+      const docRef = doc(firestore, COLLECTION.USERS, user.uid);
+      const document = await setDoc(docRef, {
+        online: true,
+        displayName: user.displayName || user.email,
+        photoURL: user.photoURL || IMG_PLACEHOLDER,
+        timestamp: serverTimestamp(),
+      });
+      dispatchNotCancelled({ type: 'ADDED_DOCMENT', payload: document });
+    } catch (err: any) {
+      dispatchNotCancelled({ type: 'ON_ERROR', payload: err.message });
+      setError(err?.message);
+    }
+  };
+
+  const signup = async (email: string, password: string) => {
+    try {
+      const { user } = await createUserWithEmailAndPassword(auth, email, password);
+      dispatchNotCancelled({ type: 'LOGIN', payload: user });
+      setDocument(user);
+    } catch (err: any) {
+      dispatchNotCancelled({ type: 'ON_ERROR', payload: err.message });
+      setError(err?.message);
+    }
+  };
+
+  const signUpWithGoogle = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const { user } = await signInWithPopup(auth, provider);
+      dispatchNotCancelled({ type: 'LOGIN', payload: user });
+      setDocument(user);
+    } catch (err: any) {
+      dispatchNotCancelled({ type: 'ON_ERROR', payload: err.message });
+      setError(err?.message);
+    }
+  };
+
+  useEffect(() => {
+    return () => setIsCancelled(true);
+  }, []);
+
+  return { signup, signUpWithGoogle, error };
 };
 
 export default useSignUp;
