@@ -38,10 +38,10 @@ const GalleryContainer = () => {
 
   return (
     <>
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center px-4 pt-4 pb-3 border-b">
         <h2 className="text-3xl font-bold my-4">Gallery</h2>
       </div>
-      <ul className="h-screen grid grid-cols-3 gap-4 mb-4">
+      <ul className="min-h-screen grid grid-cols-3 gap-4 mb-4">
         {error && <h2 className="text-3xl text-center font-bold my-4">{error}</h2>}
         {gallery?.map((item: IPhoto) => (
           <li key={item.id} className="mx-6">

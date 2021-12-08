@@ -17,7 +17,7 @@ const AuthLayout = ({ children }: IChildrenProps) => {
   ];
 
   return (
-    <div className="auth">
+    <div className="auth h-screen">
       <header className="flex items-center justify-between my-2">
         <h4 className="font-bold">Login Header Title</h4>
         <VMenu menuArray={menuArray} />

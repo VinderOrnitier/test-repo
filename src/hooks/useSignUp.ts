@@ -18,6 +18,7 @@ interface IUser {
 export const useSignUp = () => {
   const [error, setError] = useState(null);
   const [isCancelled, setIsCancelled] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { dispatch } = useContext(LoginContext);
   const { auth, firestore } = useContext(AppContext);
@@ -29,6 +30,7 @@ export const useSignUp = () => {
   };
 
   const setDocument = async (user: IUser) => {
+    setIsLoading(true)
     try {
       const docRef = doc(firestore, COLLECTION.USERS, user.uid);
       const document = await setDoc(docRef, {
@@ -36,19 +38,24 @@ export const useSignUp = () => {
         displayName: user.displayName || user.email,
         photoURL: user.photoURL || IMG_PLACEHOLDER,
         timestamp: serverTimestamp(),
-      });
+      }, { merge: true });
       dispatchNotCancelled({ type: 'ADDED_DOCMENT', payload: document });
+      setIsLoading(false);
     } catch (err: any) {
       dispatchNotCancelled({ type: 'ON_ERROR', payload: err.message });
       setError(err?.message);
+      setIsLoading(false);
     }
   };
 
+
   const signup = async (email: string, password: string) => {
     try {
+      setIsLoading(true)
       const { user } = await createUserWithEmailAndPassword(auth, email, password);
       dispatchNotCancelled({ type: 'LOGIN', payload: user });
       setDocument(user);
+      setIsLoading(false)
     } catch (err: any) {
       dispatchNotCancelled({ type: 'ON_ERROR', payload: err.message });
       setError(err?.message);
@@ -71,7 +78,7 @@ export const useSignUp = () => {
     return () => setIsCancelled(true);
   }, []);
 
-  return { signup, signUpWithGoogle, error };
+  return { signup, signUpWithGoogle, isLoading, error };
 };
 
 export default useSignUp;

@@ -1,46 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
-import { VStepper, VStep, VButton, VLoader } from '../../../components';
+import { VButton, VLoader } from '../../../components';
 import { getFormData, setFormData } from '../../../utils';
 
-import CompanyStep from '../components/CompanyStep';
-import FinalStep from '../components/FinalStep';
-import PersonalStep from '../components/PersonalStep';
 import { IStepper } from '../main.types';
 import { useAuthContext, useDocument, useFirestore } from '../../../hooks';
 
-const TABS = [
-  {
-    component: PersonalStep,
-    title: 'Personal information',
-  },
-  {
-    component: CompanyStep,
-    title: 'Company information',
-  },
-  {
-    component: FinalStep,
-    title: 'Summary report',
-  },
-];
-
-interface LocationState {
-  activeStep: number;
-}
 
 const MainContainer = () => {
+  const history = useHistory();
   const [initialValues] = useState(getFormData);
   const { user } = useAuthContext();
   const [form, setForm] = useState<IStepper>(initialValues);
-  const { state = { activeStep: 0 } } = useLocation<LocationState>();
   const { response, updateDocument } = useFirestore('forms');
   const { document, error } = useDocument({c:'forms', id:user.uid});
   
   const docRef = document || initialValues
-
-  const tab = TABS[state?.activeStep] || TABS[0];
-  const activeTab = state?.activeStep || 0;
   const isComplete = form?.formComplete || false;
 
   useEffect(() => {
@@ -49,8 +25,14 @@ const MainContainer = () => {
   }, [docRef]);
 
   
-  const handleEditForm = async () => {
+  const handleEditKYC = async () => {
     await updateDocument(user.uid, { ...docRef, formComplete: false })
+    history.push(`kyc/${user.uid}`);
+  };
+
+    
+  const redirectToKYC = () => {
+    history.push(`kyc/${user.uid}`);
   };
 
   if (response.isLoading) {
@@ -63,25 +45,32 @@ const MainContainer = () => {
 
   return (
     <>
-      <div className="text-center text-3xl font-bold mb-8"> Welcome to Main App!</div>
-      {isComplete ? (
-        <div className="text-center p-24">
-          <div className="text-white text-3xl font-bold mb-8 mt-8">Form submit complete</div>
-          {form?.companyName && <div>Your company: <b>{form?.companyName}</b></div>}
-          <VButton onClick={handleEditForm} className="ml-auto mt-8">
-            Edit form
-          </VButton>
-        </div>
-      ) : (
-        <>
-          <VStepper>
-            {TABS.map(({ title }, i) => (
-              <VStep key={title} title={title} tabIndex={i} completed={i < activeTab} activeStep={activeTab === i} />
-            ))}
-          </VStepper>
-          <tab.component />
-        </>
-      )}
+      <div className="text-center px-4 pt-4 pb-3 border-b">
+        <h2 className="text-3xl font-bold my-4">Welcome! {'\u{1F44B}'}</h2>
+      </div>
+      <div className="p-4">
+        {isComplete ? (
+          <div className="flex items-center border p-4">
+            <div>
+              <div className="text-white text-3xl font-bold">KYC complete</div>
+              {form?.companyName && <div>Your company: <b>{form.companyName}</b></div>}
+            </div>
+            <VButton onClick={handleEditKYC} className="ml-auto">
+              Edit KYC
+            </VButton>
+          </div>
+        ) : (
+          <div className="flex items-center border p-4">
+            <div>
+              <div className="text-white text-3xl font-bold">Please sumbit your KYC</div>
+              <div>If you want use platform features</div>
+            </div>
+            <VButton onClick={redirectToKYC} className="ml-auto">
+              Start
+            </VButton>
+          </div>
+        )}
+      </div>
     </>
   );
 };

@@ -1,15 +1,16 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { Prompt } from 'react-router-dom';
+import { Prompt, useParams } from 'react-router-dom';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 import { ImageUpload, VButton, VLoader } from '../../../components';
 import { fromCamelCase, goBackRedirect } from '../../../helpers';
 import { getFormData, setFormData } from '../../../utils';
-import { IStepper } from '../main.types';
+import { IStepper } from '../kyc.types';
 import { useAuthContext, useDocument, useFirestore } from '../../../hooks';
 import { AppContext } from '../../core/AppContextProvider';
 
 const FinalStep = () => {
+  const { id } = useParams<{id: string}>();
   const { storage } = useContext(AppContext);
   const [initialValues] = useState(getFormData);
   const { user } = useAuthContext();
@@ -40,7 +41,7 @@ const FinalStep = () => {
     }
   };
 
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = useCallback( async () => {
     let initialImage = userImage || form?.userImage;
     let data = {
       ...initialValues,
@@ -50,7 +51,7 @@ const FinalStep = () => {
       formComplete: true,
     };
     setFormData(data);
-    handleSetForm(data);
+    await handleSetForm(data);
   // eslint-disable-next-line
   }, [initialValues, userImage, form]);
 
@@ -66,7 +67,7 @@ const FinalStep = () => {
     <>
       <Prompt
         message={(location) =>
-          location.pathname.endsWith('/') ? true : `You have unsaved changes. Are you sure you want to leave this page?`
+          location.pathname.endsWith(`/kyc/${id}`) ? true : `You have unsaved changes. Are you sure you want to leave this page?`
         }
       />
       <div className="text-white text-center text-3xl font-bold mb-8 mt-8">Summary report</div>

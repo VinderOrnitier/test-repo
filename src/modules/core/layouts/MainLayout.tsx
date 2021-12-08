@@ -1,14 +1,15 @@
 import React from 'react';
 
-import { MENU_ITEMS, PATH } from '../../../constants';
+import { COLLECTION, MENU_ITEMS, PATH } from '../../../constants';
 import IChildrenProps from '../../../interfaces/IChildren';
-import { VButton, VMenu } from '../../../components';
-import { useAuthContext, useLogOut } from '../../../hooks';
+import { VButton, VMenu, UserItem } from '../../../components';
+import { useAuthContext, useCollection, useLogOut } from '../../../hooks';
 
 const MainLayout = ({ children }: IChildrenProps) => {
   const { user } = useAuthContext();
-  const { logout, error: logoutError } = useLogOut()
-  
+  const { logout, error: logoutError } = useLogOut();
+  const { documents, error: documentsError } = useCollection(COLLECTION.USERS);
+
   const menuArray = [
     {
       path: PATH.ROOT,
@@ -30,20 +31,41 @@ const MainLayout = ({ children }: IChildrenProps) => {
   ];
   
   return (
-    <div className="main">
-      <header className="flex items-center justify-between my-2">
-        <h4 className="font-bold">
-          Hello {user?.email} {'\u{1F44B}'}
-        </h4>
-        <VMenu menuArray={menuArray} />
-      </header>
-      <hr className="mb-4" />
-      <VButton className="ml-auto block" onClick={logout}>
-        Log Out
-      </VButton>
-      <hr className="my-4" />
-      {logoutError && <p className="mb-4 text-red-900">{logoutError}</p>}
-      {children}
+    <div className="main flex w-full min-h-screen">
+      <aside className="w-1/4 border-r">
+        <div className="flex items-center justify-center">
+          <UserItem
+            srcUrl={user?.photoURL}
+            className="w-full flex-col justify-center py-2 px-4 py-11 border-b"
+            userName={user?.displayName || user?.email}
+            online={user.uid}
+          />
+        </div>
+        <div className="py-2">
+          {documentsError && <p>{documentsError}</p>}
+          <h4 className="text-white font-bold text-center mb-2">All users</h4>
+          {documents?.map((doc: any) => {
+            if (doc.id === user.uid ) return
+            return (
+              <UserItem
+                key={doc.id}
+                srcUrl={doc.photoURL}
+                className={'w-full py-2 px-4'}
+                userName={doc.displayName || doc.email}
+                online={doc.online}
+              />
+            )
+          })}
+        </div>
+      </aside>
+      <main className="w-full">
+        <header className="flex items-center justify-between border-b h-14">
+          <VMenu menuArray={menuArray} />
+          <VButton className="ml-auto block mr-4" onClick={logout}>Log Out</VButton>
+        </header>
+        {logoutError && <p className="mb-4 text-red-900">{logoutError}</p>}
+        {children}
+      </main>
     </div>
   );
 };

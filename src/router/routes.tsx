@@ -1,6 +1,7 @@
 import React from 'react';
 import { GUARD, PATH } from '../constants';
 import { GalleryContainer } from '../modules/gallery';
+import { KycContainer } from '../modules/kyc';
 import { LoginContainer } from '../modules/login';
 import { MainContainer } from '../modules/main';
 import { PostDetailsContainer } from '../modules/postDetails';
@@ -75,6 +76,15 @@ const getRoutes = () => [
     path: PATH.TRANSACTIONS,
     exact: true,
     component: TransactionsContainer,
+    error: 'Custom error for home page',
+    meta: {
+      [GUARD.AUTH_ONLY]: true
+    }
+  },
+  {
+    path: PATH.KYC,
+    exact: true,
+    component: KycContainer,
     error: 'Custom error for home page',
     meta: {
       [GUARD.AUTH_ONLY]: true

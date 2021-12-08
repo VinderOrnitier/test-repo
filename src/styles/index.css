@@ -7,6 +7,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+main {
+  background-color: #76a8ad;
+}
+
 body::-webkit-scrollbar-track {
   background-color: #006064;
 }

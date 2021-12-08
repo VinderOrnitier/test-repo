@@ -9,8 +9,10 @@ import { SignInSchema } from '../../../yup';
 import { useLogIn, useSignUp } from '../../../hooks';
 
 const LoginContainer = () => {
-  const { login, error: loginError } = useLogIn();
-  const { signup, signUpWithGoogle, error: signupError } = useSignUp();
+  const { login, isLoading: loginIsloading, error: loginError } = useLogIn();
+  const { signup, signUpWithGoogle, isLoading: signupLoading, error: signupError } = useSignUp();
+
+  const loading = loginIsloading || signupLoading;
 
   const {
     control,
@@ -64,11 +66,11 @@ const LoginContainer = () => {
           )}
         />
         <div className="flex w-full items-center justify-between mb-8">
-          <VButton onClick={handleSubmit(onLogIn)}>Log In</VButton>
-          <VButton onClick={handleSubmit(onSignUp)}>Sign Up</VButton>
+          <VButton onClick={handleSubmit(onLogIn)} disabled={loading}>Log In</VButton>
+          <VButton onClick={handleSubmit(onSignUp)} disabled={loading}>Sign Up</VButton>
         </div>
       </form>
-      <VButton onClick={() => signUpWithGoogle()}>Log In with Google</VButton>
+      <VButton onClick={() => signUpWithGoogle()} disabled={loading}>Log In with Google</VButton>
     </>
   );
 };

@@ -1,0 +1,19 @@
+.avatar {
+  position: relative;
+  display: flex;
+  height: 40px;
+  width: 40px;
+  min-width: 40px;
+  border-radius: 50%;
+  border: 2px solid #b2b2b2;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.online {
+  border-color: #83ff00;
+}
+
+.avatar img {
+  object-fit: cover;
+}

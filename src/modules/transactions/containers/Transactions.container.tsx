@@ -101,11 +101,13 @@ export default function TransactionsContainer(): ReactElement {
   }
 
   return (
-    <div>
-      <VButton className="mb-4" onClick={handleToggle}>
-        Create task
-      </VButton>
-      <hr />
+    <div className="p-4">
+      <div className="flex justify-between items-center border-b mb-4 pb-3">
+        <h2 className="text-3xl font-bold my-4">Transactions</h2>
+        <VButton className="mb-4" onClick={handleToggle}>
+          Create task
+        </VButton>
+      </div>
       <ul>
         {!documents && <p>No transactions</p>}
         {documents?.map((document: ITransactions) => (

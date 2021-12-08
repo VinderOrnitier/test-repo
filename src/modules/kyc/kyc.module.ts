@@ -1,0 +1,1 @@
+export { default as KycContainer } from './containers/KYC.container'

@@ -3,3 +3,8 @@
   border: 1px solid #ffffff;
   color: #ffffff;
 }
+
+.button:disabled {
+  background-color: #ccc;
+  pointer-events: none;
+}

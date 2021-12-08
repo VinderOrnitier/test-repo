@@ -2,23 +2,30 @@ import { useContext, useState } from 'react';
 import { AppContext } from '../modules/core/AppContextProvider';
 import { LoginContext } from '../modules/login';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, updateDoc } from 'firebase/firestore';
+import { COLLECTION } from '../constants';
 
 export const useLogIn = () => {
   const [error, setError] = useState(null);
-  const { dispatch } = useContext(LoginContext);
-  const { auth } = useContext(AppContext);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const login = (email: string, password: string) => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((res: any) => {
-        dispatch({ type: 'LOGIN', payload: res.user });
-      })
-      .catch((err: any) => {
-        setError(err.message);
-      });
+  const { dispatch } = useContext(LoginContext);
+  const { auth, firestore } = useContext(AppContext);
+
+  const login = async (email: string, password: string) => {
+    try {
+      setIsLoading(true);
+      const { user } = await signInWithEmailAndPassword(auth, email, password);
+      const ref = doc(firestore, COLLECTION.USERS, user.uid);
+      await updateDoc(ref, { online: true });
+      dispatch({ type: 'LOGIN', payload: user });
+      setIsLoading(false);
+    } catch (err: any) {
+      setError(err.message);
+    }
   };
 
-  return { login, error };
+  return { login, isLoading, error };
 };
 
 export default useLogIn;

@@ -8,6 +8,7 @@ enum PATH {
   POSTS = '/posts',
   POST = '/posts/:id',
   TERMS = '/terms',
+  KYC = '/kyc/:id',
   SERVER = 'http://localhost:5000',
 }
 
