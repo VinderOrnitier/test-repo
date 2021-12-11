@@ -15,3 +15,11 @@ export interface IStepper extends IPersonalStep, ICompanyStep {
   uid?: string,
   userImage?: string,
 }
+
+export interface IProjectCreate {
+  projectName: string;
+  dueDate: string;
+  projectCategory: string;
+  assignTo: [] | string | number;
+  projectDetails: string;
+}

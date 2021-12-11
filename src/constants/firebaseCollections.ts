@@ -3,6 +3,7 @@ enum COLLECTION {
   TRANSACTIONS = 'transactions',
   TODOS = 'todos',
   FORMS = 'forms',
+  PROJECTS = 'projects',
 }
 
 export default COLLECTION;

@@ -5,17 +5,18 @@ import { VButton, VInput, VModal } from '../../../components';
 import { ITransactions } from '../transactions.types';
 import { INITIAL_VALUES } from '../transactions.constants';
 import { useAuthContext, useCollection, useFirestore } from '../../../hooks';
+import { COLLECTION } from '../../../constants';
 
 export default function TransactionsContainer(): ReactElement {
-  const [limit, setLimit] = useState(10);
+  // const [limit, setLimit] = useState(10);
   const [modal, setModal] = useState(false);
   const [itemData, setItemData] = useState<ITransactions>(INITIAL_VALUES);
   const [updated, setUpdated] = useState(false);
   const { user } = useAuthContext();
 
-  const { response, addDocument, updateDocument, deleteDocument } = useFirestore('transactions');
+  const { response, addDocument, updateDocument, deleteDocument } = useFirestore(COLLECTION.TRANSACTIONS);
   const { documents, error: documentsError } = useCollection(
-    'transactions',
+    COLLECTION.TRANSACTIONS,
     ['uid', '==', user.uid],
     ['createdAt', 'desc']
   );
@@ -90,7 +91,7 @@ export default function TransactionsContainer(): ReactElement {
     return () => {
       reset();
     };
-  }, [reset]); // eslint-disable-line
+  }, [reset]);
 
   if (response.isLoading) {
     return <h3>Loading...</h3>;
@@ -134,9 +135,9 @@ export default function TransactionsContainer(): ReactElement {
         ))}
       </ul>
       <hr />
-      <VButton className="mt-4" onClick={() => setLimit((prev) => prev + 10)}>
+      {/* <VButton className="mt-4" onClick={() => setLimit((prev) => prev + 10)}>
         Load more
-      </VButton>
+      </VButton> */}
       <VModal title="Create post" visible={modal} setVisible={setModal}>
         <form className="flex flex-col items-baseline" onSubmit={handleSubmit(onSubmit)}>
           <Controller

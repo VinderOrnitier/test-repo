@@ -1,39 +1,45 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { AppContext } from '../modules/core/AppContextProvider';
-import { onSnapshot, doc } from 'firebase/firestore'
+import { onSnapshot, doc, Timestamp } from 'firebase/firestore';
 
 interface IDocument {
-  c: string,
-  id: string,
+  c: string;
+  id: string;
 }
 
-const useDocument = ({c, id}:IDocument) => {
-  const { firestore, firebase } = useContext(AppContext);
+const useDocument = ({ c, id }: IDocument) => {
+  const { firestore } = useContext(AppContext);
   const [document, setDocument] = useState();
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   // prevent infinite loop in useEffect with array on every call
   const docId = useRef(id).current;
 
-  const timestamp = firebase.firestore.Timestamp;
-
   useEffect(() => {
     const ref = doc(firestore, c, docId);
-    const createdAt = timestamp.fromDate(new Date());
+    const createdAt = Timestamp.fromDate(new Date());
 
-    const unsub = onSnapshot(ref, (snapshot: any) => {
-      setDocument({...snapshot.data(), createdAt});
-      setError(null);
-    }, (error: any) => {
-      console.log(error);
-      setError(error.massage);
-    })
+    const unsub = onSnapshot(
+      ref,
+      (snapshot: any) => {
+        if(snapshot.data()) {
+          setDocument({ ...snapshot.data(), id: snapshot.id, createdAt });
+          setError(null);
+        } else {
+          setError('Not such document exist');
+        }
+      },
+      (error: any) => {
+        console.log(error);
+        setError(error.massage);
+      }
+    );
 
-    return () => unsub()
-  // eslint-disable-next-line
-  }, [c, docId])
+    return () => unsub();
+    // eslint-disable-next-line
+  }, [c, docId]);
 
-  return {document, error};
+  return { document, error };
 };
 
 export default useDocument;

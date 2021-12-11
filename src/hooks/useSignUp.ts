@@ -4,9 +4,7 @@ import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 
 import { AppContext } from '../modules/core/AppContextProvider';
 import { LoginContext } from '../modules/login';
-import { COLLECTION } from '../constants';
-
-const IMG_PLACEHOLDER = 'https://via.placeholder.com/80'
+import { COLLECTION, IMAGE_PLACEHOLDERS } from '../constants';
 
 interface IUser {
   uid: string;
@@ -36,7 +34,7 @@ export const useSignUp = () => {
       const document = await setDoc(docRef, {
         online: true,
         displayName: user.displayName || user.email,
-        photoURL: user.photoURL || IMG_PLACEHOLDER,
+        photoURL: user.photoURL || IMAGE_PLACEHOLDERS.AVATAR,
         timestamp: serverTimestamp(),
       }, { merge: true });
       dispatchNotCancelled({ type: 'ADDED_DOCMENT', payload: document });

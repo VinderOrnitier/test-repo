@@ -1,18 +1,21 @@
 import React from 'react';
+import { IMAGE_PLACEHOLDERS } from '../../constants';
 import classes from './index.module.css';
 
-const IMG_PLACEHOLDER = 'https://via.placeholder.com/80'
-
 interface IProps {
-  className?: string,
-  online?: boolean,
-  srcUrl: string,
+  srcUrl: string;
+  className?: string;
+  title?: string;
+  online?: boolean;
+  small?: boolean;
 }
 
-const VAvatar = ({ className = '', srcUrl = '', online = false}: IProps) => {
+const VAvatar = ({ className = '', srcUrl = '', title = '', online = false, small = false }: IProps) => {
   return (
-    <div className={`${classes.avatar} ${className} ${online ? classes.online : ''}`}>
-      <img src={srcUrl || IMG_PLACEHOLDER} alt="user avatar" />
+    <div
+      className={`${classes.avatar} ${className} ${online ? classes.online : ''} ${small ? classes.small : ''}`}
+    >
+      <img src={srcUrl || IMAGE_PLACEHOLDERS.AVATAR} title={title} alt={title || 'user avatar'} />
     </div>
   );
 };

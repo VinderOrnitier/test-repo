@@ -4,6 +4,7 @@ import { COLLECTION, MENU_ITEMS, PATH } from '../../../constants';
 import IChildrenProps from '../../../interfaces/IChildren';
 import { VButton, VMenu, UserItem } from '../../../components';
 import { useAuthContext, useCollection, useLogOut } from '../../../hooks';
+import IUserCollection from '../../../interfaces/IUserCollection';
 
 const MainLayout = ({ children }: IChildrenProps) => {
   const { user } = useAuthContext();
@@ -41,11 +42,11 @@ const MainLayout = ({ children }: IChildrenProps) => {
             online={user.uid}
           />
         </div>
-        <div className="py-2">
+        <div className="flex flex-col overflow-y-auto py-2" style={{height: 'calc(100vh - 153px)'}}>
           {documentsError && <p>{documentsError}</p>}
           <h4 className="text-white font-bold text-center mb-2">All users</h4>
-          {documents?.map((doc: any) => {
-            if (doc.id === user.uid ) return
+          {documents?.map((doc: IUserCollection) => {
+            if (doc.id === user.uid ) return true
             return (
               <UserItem
                 key={doc.id}

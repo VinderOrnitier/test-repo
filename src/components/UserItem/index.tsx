@@ -5,8 +5,8 @@ import classes from './index.module.css';
 interface IProps {
   className?: string,
   online?: boolean,
-  srcUrl: string,
-  userName: string,
+  srcUrl: string | undefined,
+  userName?: string,
 }
 
 const UserItem = ({ className = '', srcUrl = '', userName = '', online = false}: IProps) => {

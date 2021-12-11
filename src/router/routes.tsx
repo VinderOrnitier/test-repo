@@ -6,6 +6,7 @@ import { LoginContainer } from '../modules/login';
 import { MainContainer } from '../modules/main';
 import { PostDetailsContainer } from '../modules/postDetails';
 import { PostListContainer } from '../modules/postList';
+import { ProjectDetailsContainer } from '../modules/projectDetails';
 import { TodoListContainer } from '../modules/todoList';
 import { TransactionsContainer } from '../modules/transactions';
 import { UsersListContainer } from '../modules/userList';
@@ -85,6 +86,16 @@ const getRoutes = () => [
     path: PATH.KYC,
     exact: true,
     component: KycContainer,
+    error: 'Custom error for home page',
+    meta: {
+      [GUARD.AUTH_ONLY]: true
+    }
+  },
+  
+  {
+    path: PATH.PROJECT_DETAILS,
+    exact: true,
+    component: ProjectDetailsContainer,
     error: 'Custom error for home page',
     meta: {
       [GUARD.AUTH_ONLY]: true

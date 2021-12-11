@@ -71,7 +71,7 @@ const useFirestore = (col: any) => {
     dispatch({ type: 'IS_LOADING' });
     await setDoc(ref, { ...updates }, { merge: true })
       .then((res: any) => {
-        dispatchNotCancelled({ type: 'UPDATED_DOCMENT', payload: res.data() });
+        dispatchNotCancelled({ type: 'UPDATED_DOCMENT', payload: res });
       })
       .catch((error: any) => {
         dispatchNotCancelled({ type: 'ON_ERROR', payload: error.message });

@@ -32,7 +32,8 @@ const PostDetailsContainer = () => {
               {data?.id}. {data?.title}
             </h3>
             <p>{data?.body}</p>
-            <VComments comments={comments?.comments} isCommentsLoading={commentsIsLoading} />
+            {/* @ts-ignore */}
+            {comments && <VComments comments={comments?.comments} isCommentsLoading={commentsIsLoading} />}
           </>
         )}
       </div>

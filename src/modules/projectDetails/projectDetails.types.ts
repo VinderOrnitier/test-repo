@@ -3,21 +3,15 @@ export interface IComments {
   id?: number
   title?: string
   body?: string
-  comments?: Comment[] | undefined
+  comments?: IComment[]
 }
 
 export interface IComment {
   postId?: number
-  id?: number | number
+  id?: number
   name?: string
-  email: string
+  email?: string
   body?: string
-}
-
-export interface Comment extends IComment {
-  projectName: string
-  photoURL: string
-  content: string
 }
 
 export interface IPost {

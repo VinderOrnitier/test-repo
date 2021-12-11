@@ -1,36 +1,67 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { VButton, VLoader } from '../../../components';
+import { VLoader, VModal } from '../../../components';
 import { getFormData, setFormData } from '../../../utils';
-
 import { IStepper } from '../main.types';
-import { useAuthContext, useDocument, useFirestore } from '../../../hooks';
+import { useAuthContext, useCollection, useDocument, useFirestore, useToggle } from '../../../hooks';
+import { COLLECTION } from '../../../constants';
+import CreateProjectForm from './components/CreateProjectForm';
+import NotificationAlert from './components/NotificationAlert';
+import ProjectGrid from './components/ProjectGrid';
+import ProjectFilter from './components/ProjectFilter';
+import { IUser } from '../../../interfaces/IProject';
 
 
 const MainContainer = () => {
   const history = useHistory();
+  const [toggle, isToggled] = useToggle(false);
   const [initialValues] = useState(getFormData);
-  const { user } = useAuthContext();
+  const [filtered, setFiltered] = useState('all');
   const [form, setForm] = useState<IStepper>(initialValues);
-  const { response, updateDocument } = useFirestore('forms');
-  const { document, error } = useDocument({c:'forms', id:user.uid});
+  const { user } = useAuthContext();
+  const { response, updateDocument } = useFirestore(COLLECTION.FORMS);
+  const { document, error } = useDocument({c:COLLECTION.FORMS, id:user.uid});
+  const { documents: usersDocuments, error: usersDocumentsError } = useCollection(COLLECTION.USERS);
+  const { documents, error: documentsError } = useCollection(COLLECTION.PROJECTS);
   
-  const docRef = document || initialValues
+  const docRef = document || initialValues;
   const isComplete = form?.formComplete || false;
 
+  
+  const projects = documents ? documents.filter((doc: any) => {
+    switch (filtered) {
+      case 'all':
+        return true;
+      case 'mine':
+        let assignedToMe = false;
+        doc.assignTo.forEach((u: IUser) => {
+          if(u.id === user.uid) {
+            assignedToMe = true
+          }
+        })
+        return assignedToMe;
+      case 'development':
+      case 'design':
+      case 'sales':
+      case 'marketing':
+        return doc.projectCategory === filtered;
+
+      default:
+        return true;
+    }
+  }) : null;
+  
   useEffect(() => {
     setForm(docRef);
     setFormData(docRef);
   }, [docRef]);
-
   
   const handleEditKYC = async () => {
     await updateDocument(user.uid, { ...docRef, formComplete: false })
     history.push(`kyc/${user.uid}`);
   };
 
-    
   const redirectToKYC = () => {
     history.push(`kyc/${user.uid}`);
   };
@@ -43,34 +74,42 @@ const MainContainer = () => {
     return <div>{error}</div>;
   }
 
+  const notificationAlert = isComplete ? (
+    <NotificationAlert
+      title="KYC complete"
+      subTitle={<div>Your company: <b>{form.companyName}</b></div>}
+      buttonText="Edit KYC"
+      handleButton={handleEditKYC}
+    />
+  ) : (
+    <NotificationAlert
+      title="Please sumbit your KYC"
+      subTitle={<div>If you want use platform features</div>}
+      buttonText="Start"
+      handleButton={redirectToKYC}
+    />
+  )
+
   return (
     <>
       <div className="text-center px-4 pt-4 pb-3 border-b">
         <h2 className="text-3xl font-bold my-4">Welcome! {'\u{1F44B}'}</h2>
       </div>
       <div className="p-4">
-        {isComplete ? (
-          <div className="flex items-center border p-4">
-            <div>
-              <div className="text-white text-3xl font-bold">KYC complete</div>
-              {form?.companyName && <div>Your company: <b>{form.companyName}</b></div>}
-            </div>
-            <VButton onClick={handleEditKYC} className="ml-auto">
-              Edit KYC
-            </VButton>
-          </div>
-        ) : (
-          <div className="flex items-center border p-4">
-            <div>
-              <div className="text-white text-3xl font-bold">Please sumbit your KYC</div>
-              <div>If you want use platform features</div>
-            </div>
-            <VButton onClick={redirectToKYC} className="ml-auto">
-              Start
-            </VButton>
-          </div>
-        )}
+        {notificationAlert}
+        <div className="py-4">
+          <ProjectFilter toggleModal={toggle} filter={filtered} setFilter={setFiltered} />
+          {documentsError && <p className="mb-4 text-red-500">{documentsError}</p>}
+          {projects && <ProjectGrid documents={projects} />}
+        </div>
       </div>
+      <VModal title="Create project" visible={isToggled} setVisible={toggle}>
+        <CreateProjectForm
+          toggleModal={toggle}
+          usersDocuments={usersDocuments}
+          usersDocumentsError={usersDocumentsError}
+        /> 
+      </VModal>
     </>
   );
 };
