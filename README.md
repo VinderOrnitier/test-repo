@@ -17,3 +17,7 @@ You will also see any lint errors in the console.
 ### `npm run server`
 
 Will run json server, same as `json-server --watch db.json --port 5000`
+
+### Extra scripts
+
+upload firestore rules `firebase deploy --only firestore`

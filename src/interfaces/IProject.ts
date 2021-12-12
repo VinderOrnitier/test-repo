@@ -11,7 +11,7 @@ export interface IProject {
   projectCategory: string;
   dueDate: any;
   createdAt: any;
-  ceatedBy: IUser;
+  createdBy: IUser;
   assignTo: IUser[];
   comments: [];
 }

@@ -18,6 +18,7 @@ export interface Comment extends IComment {
   projectName: string
   photoURL: string
   content: string
+  createdAt: Date | string
 }
 
 export interface IPost {

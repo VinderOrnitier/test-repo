@@ -12,7 +12,7 @@ export const ProjectInitial = {
   projectCategory: '',
   dueDate: Timestamp.fromDate(new Date()),
   createdAt: Timestamp.fromDate(new Date()),
-  ceatedBy: {
+  createdBy: {
     id: '',
     displayName: '',
     photoURL: '',

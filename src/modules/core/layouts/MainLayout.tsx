@@ -17,18 +17,18 @@ const MainLayout = ({ children }: IChildrenProps) => {
       name: MENU_ITEMS.MAIN,
     },
     {
-      path: PATH.GALLERY,
-      name: MENU_ITEMS.GALLERY,
-    },
-    {
       path: PATH.TRANSACTIONS,
       name: MENU_ITEMS.TRANSACTIONS,
     },
-    {
-      path: PATH.POSTS,
-      name: MENU_ITEMS.POSTS,
-      exact: true,
-    },
+    // {
+    //   path: PATH.GALLERY,
+    //   name: MENU_ITEMS.GALLERY,
+    // },
+    // {
+    //   path: PATH.POSTS,
+    //   name: MENU_ITEMS.POSTS,
+    //   exact: true,
+    // },
   ];
   
   return (

@@ -20,17 +20,17 @@ service cloud.firestore {
       allow read, delete: if
           request.auth.uid == resource.data.uid;
     }
-    match /users/{document=**} {
-      allow read, write: if
+    match /users/{user_id} {
+      allow read, create: if
           request.auth != null;
-      allow read, delete: if
-          request.auth.uid == resource.data.uid;
+      allow update: if
+          request.auth.uid == user_id;
     }
-    match /projects/{document=**} {
-      allow read, write: if
+    match /projects/{projects_id} {
+      allow read, create, update: if
           request.auth != null;
-      allow read, delete: if
-          request.auth.uid == resource.data.uid;
+      allow delete: if
+          request.auth.uid == resource.data.createdBy.id;
     }
   }
 }

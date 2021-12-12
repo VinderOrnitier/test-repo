@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import Hello from '../../../assets/Hello.svg'
 
 import { VLoader, VModal } from '../../../components';
 import { getFormData, setFormData } from '../../../utils';
@@ -92,8 +93,9 @@ const MainContainer = () => {
 
   return (
     <>
-      <div className="text-center px-4 pt-4 pb-3 border-b">
-        <h2 className="text-3xl font-bold my-4">Welcome! {'\u{1F44B}'}</h2>
+      <div className="flex items-center justify-center text-center px-4 pt-4 pb-3 border-b">
+        <h2 className="text-3xl font-bold my-4 mr-2">Welcome!</h2>
+        <img className="w-8" src={Hello} alt="\u{1F44B}" />
       </div>
       <div className="p-4">
         {notificationAlert}

@@ -1,4 +1,6 @@
 import React from 'react';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+
 import { VAvatar, VLoader } from '..';
 import { Comment } from '../../modules/postDetails/postDetails.types';
 
@@ -22,6 +24,10 @@ const VComments = ({ isCommentsLoading, comments }: IProps) => {
             <div className="flex items-center">
               <VAvatar className="mr-2" srcUrl={comment.photoURL} small />
               <h5 className="font-bold my-2">{comment.projectName || comment?.email}</h5>
+              <span className="text-gray-600 text-sm ml-auto">
+                {/* @ts-ignore */}
+                {formatDistanceToNow(comment.createdAt.toDate(), { addSuffix: true })}
+              </span>
             </div>
             <p className="mb-2">{comment?.content || comment?.body}</p>
           </li>

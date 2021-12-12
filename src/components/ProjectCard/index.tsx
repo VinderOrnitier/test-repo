@@ -16,8 +16,8 @@ const VProjectCard = ({project}: IProps) => {
           <h4 className="font-bold text-2xl mb-1" >{project.projectName}</h4>
           <p className="text-gray-600 text-sm mb-1" >Due by: {project?.dueDate.toDate().toDateString()}</p>
         </div>
-        <div title={`Creator: ${project.ceatedBy.displayName}`}>
-          <VAvatar srcUrl={project.ceatedBy.photoURL} />
+        <div title={`Creator: ${project.createdBy.displayName}`}>
+          <VAvatar srcUrl={project.createdBy.photoURL} />
         </div>
       </div>
       <div className="border-b pb-2 mb-2">

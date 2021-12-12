@@ -49,7 +49,7 @@ const CreateProjectForm = ({ usersDocuments, usersDocumentsError, toggleModal }:
       };
     });
     
-    const ceatedBy = {
+    const createdBy = {
       displayName: userAuth.displayName || userAuth.email,
       photoURL: userAuth.photoURL || IMAGE_PLACEHOLDERS.AVATAR,
       id: userAuth.uid,
@@ -61,7 +61,7 @@ const CreateProjectForm = ({ usersDocuments, usersDocumentsError, toggleModal }:
       projectDetails: data.projectDetails,
       dueDate: Timestamp.fromDate(new Date(data.dueDate)),
       comments: [],
-      ceatedBy: ceatedBy,
+      createdBy: createdBy,
       assignTo: assignedUsersList,
     }
     await addDocument(project);
