@@ -10,14 +10,12 @@ interface IProps {
   small?: boolean;
 }
 
-const VAvatar = ({ className = '', srcUrl = '', title = '', online = false, small = false }: IProps) => {
+const VAvatar = ({ className = '', srcUrl, title = '', online = false, small = false }: IProps) => {
   return (
-    <div
-      className={`${classes.avatar} ${className} ${online ? classes.online : ''} ${small ? classes.small : ''}`}
-    >
+    <div className={`${classes.avatar} ${className} ${online ? classes.online : ''} ${small ? classes.small : ''}`}>
       <img src={srcUrl || IMAGE_PLACEHOLDERS.AVATAR} title={title} alt={title || 'user avatar'} />
     </div>
   );
 };
 
-export default VAvatar;
+export default React.memo(VAvatar);

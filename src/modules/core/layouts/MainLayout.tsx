@@ -6,41 +6,43 @@ import { VButton, VMenu, UserItem } from '../../../components';
 import { useAuthContext, useCollection, useLogOut } from '../../../hooks';
 import IUserCollection from '../../../interfaces/IUserCollection';
 
+const menuArray = [
+  {
+    path: PATH.ROOT,
+    name: MENU_ITEMS.MAIN,
+  },
+  {
+    path: PATH.TRANSACTIONS,
+    name: MENU_ITEMS.TRANSACTIONS,
+  },
+  // {
+  //   path: PATH.GALLERY,
+  //   name: MENU_ITEMS.GALLERY,
+  // },
+  // {
+  //   path: PATH.POSTS,
+  //   name: MENU_ITEMS.POSTS,
+  //   exact: true,
+  // },
+];
+
 const MainLayout = ({ children }: IChildrenProps) => {
   const { user } = useAuthContext();
   const { logout, error: logoutError } = useLogOut();
   const { documents, error: documentsError } = useCollection(COLLECTION.USERS);
-
-  const menuArray = [
-    {
-      path: PATH.ROOT,
-      name: MENU_ITEMS.MAIN,
-    },
-    {
-      path: PATH.TRANSACTIONS,
-      name: MENU_ITEMS.TRANSACTIONS,
-    },
-    // {
-    //   path: PATH.GALLERY,
-    //   name: MENU_ITEMS.GALLERY,
-    // },
-    // {
-    //   path: PATH.POSTS,
-    //   name: MENU_ITEMS.POSTS,
-    //   exact: true,
-    // },
-  ];
   
   return (
     <div className="main flex w-full min-h-screen">
       <aside className="w-1/4 border-r">
         <div className="flex items-center justify-center">
-          <UserItem
-            srcUrl={user?.photoURL}
-            className="w-full flex-col justify-center py-2 px-4 py-11 border-b"
-            userName={user?.displayName || user?.email}
-            online={user.uid}
-          />
+          {user && (
+            <UserItem
+              srcUrl={user.photoURL}
+              className="w-full flex-col justify-center py-2 px-4 py-11 border-b"
+              userName={user?.displayName || user?.email}
+              online={user.uid}
+            />
+          )}
         </div>
         <div className="flex flex-col overflow-y-auto py-2" style={{height: 'calc(100vh - 153px)'}}>
           {documentsError && <p>{documentsError}</p>}

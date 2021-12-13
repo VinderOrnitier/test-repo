@@ -1,7 +1,6 @@
 import { SESSION_STORAGE_KEYS } from "../constants";
 
 const dafaultValues = {
-  uid: '',
   formComplete: false,
   displayName: '',
   personalAddress: '',

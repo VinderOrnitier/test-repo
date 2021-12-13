@@ -8,7 +8,7 @@ export interface ITodoState {
 
 export interface ITransactions {
   uid?: string;
-  id?: string;
+  id: string;
   name: string | undefined;
   completed?: boolean;
   amount: string | number | undefined;

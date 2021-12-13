@@ -1,8 +1,9 @@
 import React, { createContext, useReducer, useContext, useEffect } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+
 import IAction from '../../interfaces/IAction';
 import IChildrenProps from '../../interfaces/IChildren';
 import { AppContext } from '../core/AppContextProvider';
-import { onAuthStateChanged } from 'firebase/auth'
 
 export const LoginContext = createContext<any>({});
 

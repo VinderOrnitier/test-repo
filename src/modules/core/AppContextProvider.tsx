@@ -21,7 +21,7 @@ export const AppContext = createContext<any>({});
 const AppContextProvider = ({ children }: IChildrenProps) => {
   
   return (
-    <AppContext.Provider value={{firebase, firestore, storage, auth}}>
+    <AppContext.Provider value={{firestore, storage, auth}}>
       {children}
     </AppContext.Provider>
     )

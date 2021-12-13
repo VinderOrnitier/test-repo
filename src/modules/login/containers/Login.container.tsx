@@ -20,7 +20,7 @@ const LoginContainer = () => {
     formState: { errors },
   } = useForm<ILoginForm>({
     resolver: yupResolver<yup.AnyObjectSchema>(SignInSchema),
-    mode: 'onChange',
+    mode: 'onSubmit',
   });
 
   const onLogIn = async (data: any) => {
@@ -66,11 +66,17 @@ const LoginContainer = () => {
           )}
         />
         <div className="flex w-full items-center justify-between mb-8">
-          <VButton onClick={handleSubmit(onLogIn)} disabled={loading}>Log In</VButton>
-          <VButton onClick={handleSubmit(onSignUp)} disabled={loading}>Sign Up</VButton>
+          <VButton onClick={handleSubmit(onLogIn)} disabled={loading}>
+            Log In
+          </VButton>
+          <VButton onClick={handleSubmit(onSignUp)} disabled={loading}>
+            Sign Up
+          </VButton>
         </div>
       </form>
-      <VButton onClick={() => signUpWithGoogle()} disabled={loading}>Log In with Google</VButton>
+      <VButton onClick={() => signUpWithGoogle()} disabled={loading}>
+        Log In with Google
+      </VButton>
     </>
   );
 };

@@ -22,7 +22,7 @@ const MainContainer = () => {
   const [form, setForm] = useState<IStepper>(initialValues);
   const { user } = useAuthContext();
   const { response, updateDocument } = useFirestore(COLLECTION.FORMS);
-  const { document, error } = useDocument({c:COLLECTION.FORMS, id:user.uid});
+  const { document } = useDocument({c:COLLECTION.FORMS, id:user.uid});
   const { documents: usersDocuments, error: usersDocumentsError } = useCollection(COLLECTION.USERS);
   const { documents, error: documentsError } = useCollection(COLLECTION.PROJECTS);
   
@@ -69,10 +69,6 @@ const MainContainer = () => {
 
   if (response.isLoading) {
     return <VLoader className="h-64" />;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
   }
 
   const notificationAlert = isComplete ? (

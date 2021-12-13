@@ -6,6 +6,7 @@ import { ITransactions } from '../transactions.types';
 import { INITIAL_VALUES } from '../transactions.constants';
 import { useAuthContext, useCollection, useFirestore } from '../../../hooks';
 import { COLLECTION } from '../../../constants';
+import ListItem from '../components/ListItem';
 
 export default function TransactionsContainer(): ReactElement {
   // const [limit, setLimit] = useState(10);
@@ -83,7 +84,7 @@ export default function TransactionsContainer(): ReactElement {
     setModal(false);
   };
 
-  const handleDelete = (id: string | undefined) => {
+  const handleDelete = (id: string) => {
     deleteDocument(id);
   };
 
@@ -109,29 +110,17 @@ export default function TransactionsContainer(): ReactElement {
           Create task
         </VButton>
       </div>
+      {response.onError && <p>{response.onError}</p>}
       <ul>
-        {!documents && <p>No transactions</p>}
+        {!documents?.length && <p className="mb-4">No transactions</p>}
         {documents?.map((document: ITransactions) => (
-          <li className="border flex items-center" key={document.id}>
-            <input
-              className="ml-2 mr-2"
-              type="checkbox"
-              onChange={() => handleChanged(document)}
-              checked={document.completed}
-            />
-            <div className="flex w-full items-center justify-between">
-              <div className="mr-4">
-                {document.id} - {document.name}
-                {document?.amount && (<b className="ml-4">amount: {document.amount}</b>)}
-              </div>
-              <div className="ml-4">
-                <button className="text-red-400" onClick={() => handleDelete(document?.id)}>
-                  Delete &nbsp;
-                </button>
-                <button onClick={() => handleUpdateModal(document)}>&nbsp; Update</button>
-              </div>
-            </div>
-          </li>
+          <ListItem
+            key={document.id}
+            document={document}
+            handleChanged={handleChanged}
+            handleDelete={handleDelete}
+            handleUpdateModal={handleUpdateModal}
+          />
         ))}
       </ul>
       <hr />
@@ -154,7 +143,7 @@ export default function TransactionsContainer(): ReactElement {
             control={control}
             render={({ field: { ref, ...rest } }) => (
               <div className="mb-4">
-                <VInput {...rest} placeholder="Amount" />
+                <VInput {...rest} placeholder="Amount" type='number' />
               </div>
             )}
           />

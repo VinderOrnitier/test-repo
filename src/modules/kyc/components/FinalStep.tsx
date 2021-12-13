@@ -3,11 +3,13 @@ import { Prompt, useParams } from 'react-router-dom';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 import { ImageUpload, VButton, VLoader } from '../../../components';
-import { fromCamelCase, goBackRedirect } from '../../../helpers';
+import { goBackRedirect } from '../../../helpers';
 import { getFormData, setFormData } from '../../../utils';
 import { IStepper } from '../kyc.types';
 import { useAuthContext, useDocument, useFirestore } from '../../../hooks';
 import { AppContext } from '../../core/AppContextProvider';
+import SummaryResultList from './SummaryResultList';
+import { COLLECTION } from '../../../constants';
 
 const FinalStep = () => {
   const { id } = useParams<{id: string}>();
@@ -16,51 +18,54 @@ const FinalStep = () => {
   const { user } = useAuthContext();
   const [form, setForm] = useState(initialValues);
   const [userImage, setUserImage] = useState(null);
-  const [userFile, setUserFile] = useState<any>({});
-  const { response, updateDocument } = useFirestore('forms');
-  const { document, error } = useDocument({ c: 'forms', id: user.uid });
+  const [userFile, setUserFile] = useState<any>(null);
+  const { response, updateDocument } = useFirestore(COLLECTION.FORMS);
+  const { document } = useDocument({ c: COLLECTION.FORMS, id: user.uid });
 
   const docRef = initialValues || document;
-  
-  const uploadPath = `companyThumbnails/${user.uid}/${userFile?.name}`;
-  const storageRef = ref(storage, uploadPath);
-  
 
   useEffect(() => {
     setForm(docRef);
     setFormData(docRef);
   }, [docRef]);
 
-  const handleSetForm = async (data: IStepper) => {
-    try {
-      const uploadTask = uploadBytesResumable(storageRef, userFile);
-      const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-      updateDocument(user.uid, {...data, downloadURL});
-    } catch (error) {
-      console.log('Upload image error', error);
-    }
+  const handleUpload = (data: IStepper) => {
+    const uploadPath = `companyThumbnails/${user.uid}/${userFile?.name}`;
+    const storageRef = ref(storage, uploadPath);
+    const uploadTask = uploadBytesResumable(storageRef, userFile);
+  
+    uploadTask.on(
+      'state_changed',
+      null,
+      (error) => {
+        console.log('Upload image error', error);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          updateDocument(user.uid, { ...data, downloadURL });
+        });
+      }
+    );
   };
 
-  const handleSubmit = useCallback( async () => {
-    let initialImage = userImage || form?.userImage;
+  const handleSubmit = useCallback(() => {
     let data = {
       ...initialValues,
-      userImage: initialImage,
-      uid: user.uid,
+      downloadURL: docRef.downloadURL,
       displayName: user.displayName || user.email,
       formComplete: true,
     };
     setFormData(data);
-    await handleSetForm(data);
+    if(userImage) {
+      handleUpload(data);
+    } else {
+      updateDocument(user.uid, { ...data });
+    }
   // eslint-disable-next-line
   }, [initialValues, userImage, form]);
 
   if (response.isLoading) {
     return <VLoader className="h-64" />;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
   }
 
   return (
@@ -71,31 +76,17 @@ const FinalStep = () => {
         }
       />
       <div className="text-white text-center text-3xl font-bold mb-8 mt-8">Summary report</div>
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          {Object.entries(form).map(([label, value]: [string, any]) => {
-            if(label === 'createdAt') {
-              return (
-                <div className="flex mb-2" key={label}>
-                  {value && <b className="mr-4">{fromCamelCase(label)}:</b>}
-                  <span className="text-white truncate max-w-sm">{JSON.stringify(value)}</span>
-                  {/* <span className="text-white truncate max-w-sm">{value}</span> */}
-              </div>
-              )
-            }
-            return (
-              <div className="flex mb-2" key={label}>
-                {value && <b className="mr-4">{fromCamelCase(label)}:</b>}
-                <span className="text-white truncate max-w-sm">{value}</span>
-              </div>
-            );
-          })}
+      <div className="flex flex-row flex-wrap justify-between gap-4">
+        <div className="basis-3/4">
+          <SummaryResultList form={form} />
         </div>
-        <ImageUpload initialImage={docRef.userImage} setFile={setUserImage} file={setUserFile} />
+        <div className="basis-1/4">
+          <ImageUpload initialImage={docRef?.downloadURL} setFile={setUserImage} file={setUserFile} />
+        </div>
       </div>
       <div className="flex w-full justify-between mt-8">
         <VButton onClick={goBackRedirect}>Back</VButton>
-        <VButton onClick={handleSubmit}>Submit</VButton>
+        <VButton onClick={handleSubmit} disabled={response.isLoading}>Submit</VButton>
       </div>
     </>
   );

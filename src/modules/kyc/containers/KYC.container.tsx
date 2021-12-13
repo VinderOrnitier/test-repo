@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { VStepper, VStep, VButton, VLoader } from '../../../components';
 import { getFormData, setFormData } from '../../../utils';
@@ -9,6 +9,7 @@ import FinalStep from '../components/FinalStep';
 import PersonalStep from '../components/PersonalStep';
 import { IStepper } from '../kyc.types';
 import { useAuthContext, useDocument, useFirestore } from '../../../hooks';
+import { COLLECTION } from '../../../constants';
 
 const TABS = [
   {
@@ -30,12 +31,13 @@ interface LocationState {
 }
 
 const KycContainer = () => {
+  const history = useHistory();
   const [initialValues] = useState(getFormData);
   const { user } = useAuthContext();
   const [form, setForm] = useState<IStepper>(initialValues);
   const { state = { activeStep: 0 } } = useLocation<LocationState>();
-  const { response, updateDocument } = useFirestore('forms');
-  const { document, error } = useDocument({c:'forms', id:user.uid});
+  const { response, updateDocument } = useFirestore(COLLECTION.FORMS);
+  const { document } = useDocument({c: COLLECTION.FORMS, id: user.uid});
   
   const docRef = document || initialValues
 
@@ -57,10 +59,6 @@ const KycContainer = () => {
     return <VLoader className="h-64" />;
   }
 
-  if (error) {
-    return <div>{error}</div>;
-  }
-
   return (
     <div className="p-4">
       <div className="pb-4">
@@ -70,8 +68,11 @@ const KycContainer = () => {
         <div className="text-center p-24">
           <div className="text-white text-3xl font-bold mb-8 mt-8">Form submit complete</div>
           {form?.companyName && <div>Your company: <b>{form?.companyName}</b></div>}
-          <VButton onClick={handleEditForm} className="ml-auto mt-8">
-            Edit form
+          <VButton onClick={handleEditForm} className="ml-auto mt-8 mr-8">
+            Edit KYC
+          </VButton>
+          <VButton onClick={() => history.push('/')}>
+            Back to Dashboard
           </VButton>
         </div>
       ) : (

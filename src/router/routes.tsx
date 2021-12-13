@@ -16,14 +16,14 @@ const getRoutes = () => [
     path: PATH.LOGIN,
     exact: true,
     component: LoginContainer,
-    loading: 'Custom loading for home page...',
-    error: 'Custom error for home page',
+    loading: 'Routes loading for home page...',
+    error: 'Routes error for Login page',
   },
   {
     path: PATH.ROOT,
     exact: true,
     component: MainContainer,
-    error: 'Custom error for home page',
+    error: 'Routes error for Main page',
     meta: {
       [GUARD.AUTH_ONLY]: true
     }
@@ -32,7 +32,7 @@ const getRoutes = () => [
     path: PATH.GALLERY,
     exact: true,
     component: GalleryContainer,
-    error: 'Custom error for home page',
+    error: 'Routes error for Gallery page',
     meta: {
       [GUARD.AUTH_ONLY]: true
     }
@@ -41,7 +41,7 @@ const getRoutes = () => [
     path: PATH.POSTS,
     exact: true,
     component: PostListContainer,
-    error: 'Custom error for home page',
+    error: 'Routes error for Post List page',
     meta: {
       [GUARD.AUTH_ONLY]: true
     }
@@ -50,7 +50,7 @@ const getRoutes = () => [
     path: PATH.POST,
     exact: true,
     component: PostDetailsContainer,
-    error: 'Custom error for home page',
+    error: 'Routes error for Post Details page',
     meta: {
       [GUARD.AUTH_ONLY]: true
     }
@@ -59,7 +59,7 @@ const getRoutes = () => [
     path: PATH.USERS, // just for test reasons
     exact: true,
     component: UsersListContainer,
-    error: 'Custom error for home page',
+    error: 'Routes error for Users List page',
     meta: {
       [GUARD.AUTH_ONLY]: true
     }
@@ -68,7 +68,7 @@ const getRoutes = () => [
     path: PATH.TODOS, // just for test reasons
     exact: true,
     component: TodoListContainer,
-    error: 'Custom error for home page',
+    error: 'Routes error for Todo List page',
     meta: {
       [GUARD.AUTH_ONLY]: true
     }
@@ -77,7 +77,7 @@ const getRoutes = () => [
     path: PATH.TRANSACTIONS,
     exact: true,
     component: TransactionsContainer,
-    error: 'Custom error for home page',
+    error: 'Routes error for Transactions page',
     meta: {
       [GUARD.AUTH_ONLY]: true
     }
@@ -86,7 +86,7 @@ const getRoutes = () => [
     path: PATH.KYC,
     exact: true,
     component: KycContainer,
-    error: 'Custom error for home page',
+    error: 'Custom error for Kyc page',
     meta: {
       [GUARD.AUTH_ONLY]: true
     }
@@ -96,7 +96,7 @@ const getRoutes = () => [
     path: PATH.PROJECT_DETAILS,
     exact: true,
     component: ProjectDetailsContainer,
-    error: 'Custom error for home page',
+    error: 'Routes error for Project Details page',
     meta: {
       [GUARD.AUTH_ONLY]: true
     }

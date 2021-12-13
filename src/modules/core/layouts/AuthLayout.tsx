@@ -3,18 +3,18 @@ import { MENU_ITEMS, PATH } from '../../../constants';
 import IChildrenProps from '../../../interfaces/IChildren';
 import { VMenu } from '../../../components';
 
-const AuthLayout = ({ children }: IChildrenProps) => {
+const menuArray = [
+  {
+    path: PATH.LOGIN,
+    name: MENU_ITEMS.LOGIN,
+  },
+  {
+    path: PATH.TERMS,
+    name: MENU_ITEMS.TERMS,
+  },
+];
 
-  const menuArray = [
-    {
-      path: PATH.LOGIN,
-      name: MENU_ITEMS.LOGIN,
-    },
-    {
-      path: PATH.TERMS,
-      name: MENU_ITEMS.TERMS,
-    },
-  ];
+const AuthLayout = ({ children }: IChildrenProps) => {
 
   return (
     <div className="auth h-screen px-4">

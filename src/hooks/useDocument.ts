@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { AppContext } from '../modules/core/AppContextProvider';
-import { onSnapshot, doc, Timestamp } from 'firebase/firestore';
+import { onSnapshot, doc, Timestamp, DocumentData, FirestoreError  } from 'firebase/firestore';
 
 interface IDocument {
   c: string;
@@ -21,7 +21,7 @@ const useDocument = ({ c, id }: IDocument) => {
 
     const unsub = onSnapshot(
       ref,
-      (snapshot: any) => {
+      (snapshot: DocumentData) => {
         if(snapshot.data()) {
           setDocument({ ...snapshot.data(), id: snapshot.id, createdAt });
           setError(null);
@@ -29,9 +29,9 @@ const useDocument = ({ c, id }: IDocument) => {
           setError('Not such document exist');
         }
       },
-      (error: any) => {
+      (error: FirestoreError ) => {
         console.log(error);
-        setError(error.massage);
+        setError(error.message);
       }
     );
 

@@ -57,6 +57,7 @@ export const useSignUp = () => {
     } catch (err: any) {
       dispatchNotCancelled({ type: 'ON_ERROR', payload: err.message });
       setError(err?.message);
+      setIsLoading(false)
     }
   };
 
@@ -69,6 +70,7 @@ export const useSignUp = () => {
     } catch (err: any) {
       dispatchNotCancelled({ type: 'ON_ERROR', payload: err.message });
       setError(err?.message);
+      setIsLoading(false)
     }
   };
 

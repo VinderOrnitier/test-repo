@@ -26,7 +26,7 @@ const ImageUpload = ({initialImage, setFile, file}: IFileUplodProps) => {
   }
   
   return (
-    <div>
+    <>
       <input id='imageInput' className="hidden" type="file" accept="image/png" onChange={handleImageFile}/>
       <label className="inline-block cursor-pointer mb-4" htmlFor="imageInput">
         <VButton className="pointer-events-none">Upload image</VButton>
@@ -37,7 +37,7 @@ const ImageUpload = ({initialImage, setFile, file}: IFileUplodProps) => {
         src={imageSrc}
         alt="avatar"
       />
-    </div>
+    </>
   )
 }
 

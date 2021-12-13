@@ -6,7 +6,7 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { COLLECTION } from '../constants';
 
 export const useLogIn = () => {
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<null | string>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const { dispatch } = useContext(LoginContext);
@@ -20,8 +20,9 @@ export const useLogIn = () => {
       await updateDoc(ref, { online: true });
       dispatch({ type: 'LOGIN', payload: user });
       setIsLoading(false);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError('You have entered an invalid email or password');
+      setIsLoading(false);
     }
   };
 

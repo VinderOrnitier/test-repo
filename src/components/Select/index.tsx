@@ -1,8 +1,13 @@
 import React from 'react';
 import classes from './index.module.css';
 
+interface Option {
+  value: any
+  name: string
+}
+
 interface IProps {
-  options?: any[];
+  options?: Option[];
   value: string | number | [];
   onChange: (value: any) => void;
   placeholder?: string;
@@ -26,7 +31,7 @@ const VSelect = ({ options, value, onChange, placeholder, className = '', multip
       <option defaultValue={placeholder} hidden>
         {placeholder}
       </option>
-      {options?.map((option: any) => (
+      {options?.map((option: Option) => (
         <option
           key={option.value.id || option.value}
           value={option.value.id || option.value}
