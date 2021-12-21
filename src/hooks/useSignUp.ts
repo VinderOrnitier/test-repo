@@ -1,21 +1,84 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+
 import { AppContext } from '../modules/core/AppContextProvider';
 import { LoginContext } from '../modules/login';
+import { COLLECTION, IMAGE_PLACEHOLDERS } from '../constants';
+
+interface IUser {
+  uid: string;
+  displayName: string | null;
+  email: string | null;
+  photoURL: string | null;
+}
 
 export const useSignUp = () => {
-  const { dispatch } = useContext(LoginContext);
-  const { auth } = useContext(AppContext);
+  const [error, setError] = useState(null);
+  const [isCancelled, setIsCancelled] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const signup = async (email: string, password: string) => {
-    try {
-      const { user } = await auth.createUserWithEmailAndPassword(email, password);
-      dispatch({ type: 'LOGIN', payload: user });
-    } catch (err: any) {
-      console.log(err?.message);
+  const { dispatch } = useContext(LoginContext);
+  const { auth, firestore } = useContext(AppContext);
+
+  const dispatchNotCancelled = (action: any) => {
+    if (!isCancelled) {
+      dispatch(action);
     }
   };
 
-  return { signup };
+  const setDocument = async (user: IUser) => {
+    setIsLoading(true)
+    try {
+      const docRef = doc(firestore, COLLECTION.USERS, user.uid);
+      const document = await setDoc(docRef, {
+        online: true,
+        displayName: user.displayName || user.email,
+        photoURL: user.photoURL || IMAGE_PLACEHOLDERS.AVATAR,
+        timestamp: serverTimestamp(),
+      }, { merge: true });
+      dispatchNotCancelled({ type: 'ADDED_DOCMENT', payload: document });
+      setIsLoading(false);
+    } catch (err: any) {
+      dispatchNotCancelled({ type: 'ON_ERROR', payload: err.message });
+      setError(err?.message);
+      setIsLoading(false);
+    }
+  };
+
+
+  const signup = async (email: string, password: string) => {
+    try {
+      setIsLoading(true)
+      const { user } = await createUserWithEmailAndPassword(auth, email, password);
+      dispatchNotCancelled({ type: 'LOGIN', payload: user });
+      setDocument(user);
+      setIsLoading(false)
+    } catch (err: any) {
+      dispatchNotCancelled({ type: 'ON_ERROR', payload: err.message });
+      setError(err?.message);
+      setIsLoading(false)
+    }
+  };
+
+  const signUpWithGoogle = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const { user } = await signInWithPopup(auth, provider);
+      dispatchNotCancelled({ type: 'LOGIN', payload: user });
+      setDocument(user);
+    } catch (err: any) {
+      dispatchNotCancelled({ type: 'ON_ERROR', payload: err.message });
+      setError(err?.message);
+      setIsLoading(false)
+    }
+  };
+
+  useEffect(() => {
+    return () => setIsCancelled(true);
+  }, []);
+
+  return { signup, signUpWithGoogle, isLoading, error };
 };
 
 export default useSignUp;

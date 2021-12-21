@@ -1,21 +1,32 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { AppContext } from '../modules/core/AppContextProvider';
 import { LoginContext } from '../modules/login';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, updateDoc } from 'firebase/firestore';
+import { COLLECTION } from '../constants';
 
 export const useLogIn = () => {
+  const [error, setError] = useState<null | string>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
   const { dispatch } = useContext(LoginContext);
-  const { auth } = useContext(AppContext);
+  const { auth, firestore } = useContext(AppContext);
 
   const login = async (email: string, password: string) => {
     try {
-      const { user } = await auth.signInWithEmailAndPassword(email, password);
+      setIsLoading(true);
+      const { user } = await signInWithEmailAndPassword(auth, email, password);
+      const ref = doc(firestore, COLLECTION.USERS, user.uid);
+      await updateDoc(ref, { online: true });
       dispatch({ type: 'LOGIN', payload: user });
-    } catch (err: any) {
-      console.log(err?.message);
+      setIsLoading(false);
+    } catch (err) {
+      setError('You have entered an invalid email or password');
+      setIsLoading(false);
     }
   };
 
-  return { login };
+  return { login, isLoading, error };
 };
 
 export default useLogIn;

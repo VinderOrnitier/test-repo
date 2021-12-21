@@ -52,12 +52,11 @@ const PostListContainer = () => {
   };
   
   return (
-    <>
-      <div className="flex justify-between items-center">
+    <div className="p-4">
+      <div className="flex justify-between items-center border-b mb-4 pb-3">
         <h2 className="text-3xl font-bold my-4">Post list</h2>
         <VButton onClick={toggleModal}>Add new post</VButton>
       </div>
-      <hr className="my-4" />
       <PostFilter filter={filtered} setFilter={setFiltered} />
       {error && <h2 className="text-3xl text-center font-bold my-4">{error}</h2>}
       {isLoading ? (
@@ -87,7 +86,7 @@ const PostListContainer = () => {
       <VModal title="Create post" visible={modal} setVisible={setModal}>
         <PostForm create={handlePost} />
       </VModal>
-    </>
+    </div>
   );
 };
 

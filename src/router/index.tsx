@@ -1,15 +1,15 @@
 import React, { useMemo } from 'react';
 import { Route, Router, Switch } from 'react-router-dom';
 import { GuardProvider, GuardedRoute } from 'react-router-guards';
+
 import { VLoader } from '../components';
 import { useAuthContext, useGuardsRouter } from '../hooks';
-
 import { history } from '../utils';
 import getRoutes from './routes';
 
 const AppRouter = ({ children }: any) => {
-  const { authIsReady } = useAuthContext()
-  const { requireLogin } = useGuardsRouter()
+  const { authIsReady } = useAuthContext();
+  const { requireLogin } = useGuardsRouter();
   const GLOBAL_GUARDS = [requireLogin];
   const routes = useMemo(() => getRoutes(), []);
   return (

@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Prompt, useHistory, useLocation } from "react-router-dom";
+import { Prompt, useHistory, useLocation, useParams } from "react-router-dom";
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -7,9 +7,10 @@ import * as yup from 'yup';
 import { VButton, VInput } from '../../../components';
 import { getFormData, setFormData } from '../../../utils';
 import { StepperPersonalSchema } from '../../../yup';
-import { IPersonalStep } from '../main.types';
+import { IPersonalStep } from '../kyc.types';
 
 const PersonalStep = () => {
+  const { id } = useParams<{id: string}>();
   const history = useHistory();
   const location = useLocation();
   const [initialValues] = useState(getFormData);
@@ -34,7 +35,7 @@ const PersonalStep = () => {
     <>
       <Prompt
         message={(location) =>
-          location.pathname.endsWith('/') ? true : `You have unsaved changes. Are you sure you want to leave this page?`
+          location.pathname.endsWith(`/kyc/${id}`) ? true : `You have unsaved changes. Are you sure you want to leave this page?`
         }
       />
       <div className="text-white text-center text-3xl font-bold mb-8 mt-8">Personal information</div>

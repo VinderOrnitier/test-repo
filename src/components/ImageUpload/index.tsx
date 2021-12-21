@@ -6,14 +6,16 @@ import { VButton } from '..'
 interface IFileUplodProps {
   initialImage: string,
   setFile: Function,
+  file: Function,
 }
 
-const ImageUpload = ({initialImage, setFile}: IFileUplodProps) => {
+const ImageUpload = ({initialImage, setFile, file}: IFileUplodProps) => {
   const [userImage, setUserImage] = useState(null);
 
   const imageSrc = userImage || initialImage || "https://via.placeholder.com/100/ffffff";
   
   const handleImageFile = (event: any) => {
+    file(event.target?.files[0]);
     let reader = new FileReader();
     reader.onload = (e: any) => {
       setUserImage(e.target?.result);
@@ -24,7 +26,7 @@ const ImageUpload = ({initialImage, setFile}: IFileUplodProps) => {
   }
   
   return (
-    <div>
+    <>
       <input id='imageInput' className="hidden" type="file" accept="image/png" onChange={handleImageFile}/>
       <label className="inline-block cursor-pointer mb-4" htmlFor="imageInput">
         <VButton className="pointer-events-none">Upload image</VButton>
@@ -35,7 +37,7 @@ const ImageUpload = ({initialImage, setFile}: IFileUplodProps) => {
         src={imageSrc}
         alt="avatar"
       />
-    </div>
+    </>
   )
 }
 

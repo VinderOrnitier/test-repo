@@ -1,4 +1,8 @@
-.input {
+.list {
   padding: 4px 8px;
-  border: 1px solid #ffffff;
+}
+
+.listItem {
+  margin-right: -16px;
+  transform: translateX(-24px);
 }

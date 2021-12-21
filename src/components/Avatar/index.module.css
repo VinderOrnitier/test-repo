@@ -1,0 +1,27 @@
+.avatar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 40px;
+  width: 40px;
+  min-width: 40px;
+  border-radius: 50%;
+  border: 2px solid #b2b2b2;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.small {
+  height: 30px;
+  width: 30px;
+  min-width: 30px;
+}
+
+.online {
+  border-color: #83ff00;
+}
+
+.avatar img {
+  object-fit: cover;
+  height: inherit;
+}

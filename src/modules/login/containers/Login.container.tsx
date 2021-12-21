@@ -1,20 +1,18 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { GoogleAuthProvider } from 'firebase/auth';
 import * as yup from 'yup';
 
-import { AppContext } from '../../core/AppContextProvider';
 import { VInput, VButton } from '../../../components';
 import { ILoginForm } from '../login.types';
 import { SignInSchema } from '../../../yup';
-import { useLogIn, useSignUp, useAuthContext } from '../../../hooks';
+import { useLogIn, useSignUp } from '../../../hooks';
 
 const LoginContainer = () => {
-  const { auth } = useContext(AppContext);
-  const { dispatch } = useAuthContext();
-  const { login } = useLogIn();
-  const { signup } = useSignUp();
+  const { login, isLoading: loginIsloading, error: loginError } = useLogIn();
+  const { signup, signUpWithGoogle, isLoading: signupLoading, error: signupError } = useSignUp();
+
+  const loading = loginIsloading || signupLoading;
 
   const {
     control,
@@ -22,7 +20,7 @@ const LoginContainer = () => {
     formState: { errors },
   } = useForm<ILoginForm>({
     resolver: yupResolver<yup.AnyObjectSchema>(SignInSchema),
-    mode: 'onChange',
+    mode: 'onSubmit',
   });
 
   const onLogIn = async (data: any) => {
@@ -30,23 +28,14 @@ const LoginContainer = () => {
   };
 
   const onSignUp = async (data: any) => {
-    signup(data?.email, data?.password);
-  };
-
-  const onLogInWithGoggle = async () => {
-    try {
-      const provider = new GoogleAuthProvider();
-      const { user } = await auth.signInWithPopup(provider);
-      dispatch({ type: 'LOGIN', payload: user });
-    } catch (error) {
-      console.log(error);
-    }
+    signup(data.email, data.password);
   };
 
   return (
     <>
       <h2 className="text-3xl text-center font-bold my-4">Login</h2>
       <hr className="my-4" />
+      {(loginError || signupError) && <p className="mb-4 text-red-900">{loginError || signupError}</p>}
       <form className="flex flex-col items-baseline">
         <Controller
           name="email"
@@ -77,11 +66,17 @@ const LoginContainer = () => {
           )}
         />
         <div className="flex w-full items-center justify-between mb-8">
-          <VButton onClick={handleSubmit(onLogIn)}>Log In</VButton>
-          <VButton onClick={handleSubmit(onSignUp)}>Sign Up</VButton>
+          <VButton onClick={handleSubmit(onLogIn)} disabled={loading}>
+            Log In
+          </VButton>
+          <VButton onClick={handleSubmit(onSignUp)} disabled={loading}>
+            Sign Up
+          </VButton>
         </div>
       </form>
-      <VButton onClick={onLogInWithGoggle}>Log In with Google</VButton>
+      <VButton onClick={() => signUpWithGoogle()} disabled={loading}>
+        Log In with Google
+      </VButton>
     </>
   );
 };

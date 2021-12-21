@@ -4,6 +4,7 @@ enum MENU_ITEMS {
   GALLERY = 'Gallery',
   POSTS = 'Posts',
   TERMS = 'Terms and conditions',
+  TRANSACTIONS = 'Transactions',
 }
 
 export default MENU_ITEMS;
