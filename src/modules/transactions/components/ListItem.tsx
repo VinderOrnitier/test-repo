@@ -34,4 +34,4 @@ const ListItem = ({document, handleChanged, handleDelete, handleUpdateModal}: Pr
   )
 }
 
-export default ListItem;
+export default React.memo(ListItem);

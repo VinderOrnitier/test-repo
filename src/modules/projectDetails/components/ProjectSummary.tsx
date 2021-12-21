@@ -16,9 +16,9 @@ const ProjectSummary = ({project}: IProps) => {
       <div className="pb-4 border-b">
         <p className="text-2xl font-bold text-white mb-4" >Description:</p>
         {project.projectDetails}
-        <p className="text-right capitalize text-gray-500 text-sm mt-2" >
+        <p className="text-right text-gray-600 capitalize text-sm mt-2" >
           Category:
-          <span className="ring italic ring-gray-500 font-bold rounded px-1 ml-2">
+          <span className="border-2 font-bold italic ml-2 pb-0.5 px-1 text-white">
             {project.projectCategory}
           </span>
         </p>

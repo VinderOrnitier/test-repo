@@ -7,6 +7,6 @@ export const INITIAL_VALUES = {
   uid: '',
   name: '',
   completed: false,
-  amount: '',
+  amount: 0,
   createdAt: {},
 }

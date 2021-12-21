@@ -1,12 +1,9 @@
 import * as yup from 'yup';
-import { REGEX } from '../constants';
 
 const ProjectCreateSchema = yup.object().shape({
   projectName: yup.string()
     .required("Company name is required")
-    .test('alphabets', 'Name must only contain alphabets', (value: any) => {
-      return REGEX.NAME_FIELD.test(value);
-    }),
+    .max(56, 'Details must be at most 56 characters'),
   projectDetails: yup.string().optional().max(256, 'Details must be at most 256 characters'),
   projectCategory: yup.string().required('Category is required'),
   dueDate: yup.string().required('Please select date'),

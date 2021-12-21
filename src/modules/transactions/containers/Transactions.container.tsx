@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useState, useCallback } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 
 import { VButton, VInput, VModal } from '../../../components';
@@ -21,15 +21,10 @@ export default function TransactionsContainer(): ReactElement {
     ['uid', '==', user.uid],
     ['createdAt', 'desc']
   );
-  
-  const {
-    control,
-    handleSubmit,
-    setValue,
-    reset,
-  } = useForm<ITransactions>({
+
+  const { control, handleSubmit, setValue, reset } = useForm<ITransactions>({
     mode: 'onChange',
-    defaultValues: INITIAL_VALUES || {},
+    defaultValues: INITIAL_VALUES,
   });
 
   const handleToggle = () => {
@@ -43,7 +38,7 @@ export default function TransactionsContainer(): ReactElement {
       uid: user.uid,
       name: data.name,
       amount: data.amount,
-      completed: false
+      completed: false,
     });
   };
 
@@ -51,24 +46,24 @@ export default function TransactionsContainer(): ReactElement {
     await updateDocument(data.id, { ...data });
   };
 
-  const handleChanged = async (data: ITransactions) => {
+  const handleChanged = useCallback(async (data: ITransactions) => {
     await updateDocument(data.id, { ...data, completed: !data.completed });
-  };
+  }, [updateDocument]);
 
   const handleUpdateModal = (data: ITransactions) => {
-    setModal(prev => prev = true);
-    setUpdated(prev => prev = true);
-    setItemData(prev => ({...prev, ...data}));
+    setModal((prev) => (prev = true));
+    setUpdated((prev) => (prev = true));
+    setItemData((prev) => ({ ...prev, ...data }));
     setValue('name', data.name);
     setValue('amount', data.amount);
   };
 
   const onSubmit = (data: ITransactions) => {
-    if(updated) {
+    if (updated) {
       handleUpdate({
         ...itemData,
         name: data.name,
-        amount: data.amount
+        amount: data.amount,
       });
     } else {
       handleCreate({
@@ -77,7 +72,7 @@ export default function TransactionsContainer(): ReactElement {
         uid: user.uid,
         name: data.name,
         amount: data.amount,
-        completed: false
+        completed: false,
       });
     }
     reset();
@@ -94,12 +89,8 @@ export default function TransactionsContainer(): ReactElement {
     };
   }, [reset]);
 
-  if (response.isLoading) {
-    return <h3>Loading...</h3>;
-  }
-
-  if (documentsError) {
-    return <h3>Cant load todos</h3>;
+  if (documentsError || response.onError) {
+    return <h3>{documentsError || response.onError}</h3>;
   }
 
   return (
@@ -110,7 +101,6 @@ export default function TransactionsContainer(): ReactElement {
           Create task
         </VButton>
       </div>
-      {response.onError && <p>{response.onError}</p>}
       <ul>
         {!documents?.length && <p className="mb-4">No transactions</p>}
         {documents?.map((document: ITransactions) => (
@@ -143,7 +133,7 @@ export default function TransactionsContainer(): ReactElement {
             control={control}
             render={({ field: { ref, ...rest } }) => (
               <div className="mb-4">
-                <VInput {...rest} placeholder="Amount" type='number' />
+                <VInput {...rest} placeholder="Amount" type="number" />
               </div>
             )}
           />

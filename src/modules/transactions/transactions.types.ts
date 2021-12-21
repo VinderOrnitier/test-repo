@@ -11,5 +11,5 @@ export interface ITransactions {
   id: string;
   name: string | undefined;
   completed?: boolean;
-  amount: string | number | undefined;
+  amount: number;
 }
