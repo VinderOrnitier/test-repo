@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { ref, onDisconnect, serverTimestamp, onValue, set } from 'firebase/database';
 import { doc, updateDoc, serverTimestamp as fsTimestamp } from 'firebase/firestore';
 
@@ -51,6 +51,8 @@ const MainLayout = ({ children }: IChildrenProps) => {
       if (currentObj && currentObj.state === 'online') {
         result.push(item);
       }
+
+      return true
     });
   
     return result;
